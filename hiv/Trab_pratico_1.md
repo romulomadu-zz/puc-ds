@@ -127,6 +127,7 @@ select sexo,idade, count(*) as total from (
   as sexo,credit_data.idade from hive_curso.credit_data) sub1 group by sexo,idade;
 ```
 - Figura:
+
 ![figure](image003.png)
 
 
