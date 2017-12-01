@@ -1,0 +1,3013 @@
+---
+title: "Introdução ao Software R"
+author: "Marcos F Silva"
+date: "01 de agosto 2016"
+output:
+  pdf_document:
+    toc: true
+---
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
+library(knitr)
+options(warn = -1)
+opts_chunk$set(comment = NA)
+```
+
+# CAPÍTULO 1 - INTRODUÇÃO
+
+Este curso foi idealizado para ser uma introdução ao R para pessoas com pouca ou nenhuma experiência anterior com o aplicativo ou mesmo com análise de dados de forma geral. 
+
+Foi pensado tendo em mente o técnico que necessita realizar a análise de dados colhidos durante o trabalho de campo, na  internet ou mesmo nos sistemas de informação dos TCs. 
+
+A abordagem escolhida para fazer esta introdução ao R foi com a utilização do contexto de auditoria governamental, visando especificamente a implementação de técnicas básicas de análise de dados denominadas na literatura de auditoria [**`Técnicas de Auditoria Assistidas por Computador - TAAC`**](https://en.wikipedia.org/wiki/Computer-aided_audit_tools).
+
+Dentro do ciclo proposto pela metodologia [CRISP-DM](https://pt.wikipedia.org/wiki/Cross_Industry_Standard_Process_for_Data_Mining) estas técnicas estão inseridas nas etapas de **compreensão dos dados** e **preparação dos dados**. Veja a figura a seguir:
+
+<center>
+
+![](figuras/CRISP-DM.png)  
+
+</center>
+
+Este curso atende, desta forma, a dois propósitos: ser uma introdução ao R e às técnicas de auditoria assistidas por computador, estando estruturado em 4 tópicos:
+
+* Aspectos Básicos do R;
+* Importação e exportação de dados;
+* Produção de gráficos;
+* Manipulação de dados;
+
+No capítulo dedicado aos aspectos básicos do R, o objetivo é apresentar o conteúdo necessário a que o técnico tenha uma compreensão inicial de como o R funciona, onde poderá obter ajuda, como interagir com o ambiente, quais estrutruas de dados utiliza e quais as características dessas estruturas de dados.
+
+Em razão das dificuldades normalmente experimentadas pelos usuários iniciantes durante a importação de arquivos de dados, optamos por dedicar um capítulo específico para essa tarefa no qual será visto como importar dados contidos em diversos formatos de arquivos usualmente encontrados na prática.
+
+A elaboração de gráficos é um tópico usualmente não trabalhado na literatura sobre sobre TAAC a despeito de sua grande importância. Uma boa visualização de dados pode fornecer *insights* valiosos durante a exploração de um conjunto de dados que podem levar a identificação de anomalias, fraudes e erros.  
+
+Por fim temos a parte de manipulação de dados, onde será visto como implementar no R algumas das técnicas de análise de dados disponíveis em softwares de auditoria como [ACL](http://www.acl.com/), [IDEA](http://www.casewareanalytics.com/), [Arbutus](http://www.arbutussoftware.com/), [Lavastorm](http://www.lavastorm.com/),  [ActiveData](http://www.informationactive.com/) e [TopCAATs](http://www.topcaats.com/).  
+
+A elaboração de modelos estatísticos, embora extremamente relevante, não será objeto deste curso. Acreditamos que este tópico deve ser objeto de curso específico.
+
+R é usualmente descrito como um ambiente para análise de dados e produção de gráficos, possuindo também uma linguagem de programação. Neste curso, os aspectos do R relacionados à linguagem de programação não serão objeto de discussão.  
+
+</br>  
+
+## 1.1 - RStudio
+
+Neste curso utilizaremos o [RStudio](https://www.rstudio.com/) para fazermos a interação com o R. Isto porque este aplicativo oferece um ambiente mais amigável e torna o uso do R muito mais produtivo. 
+
+Ao longo do curso os recursos deste aplicativo irão sendo apresentados à medida que se for fazendo necessário.
+
+</br>
+
+## 1.2 - Dados Utilizados
+
+Estas notas de aula (`Notas_Aula_Curso_R.pdf`) e os conjuntos de dados utilizados (`Dados_Curso_R.zip`) podem ser baixados no link a seguir: `https://goo.gl/FaUG70`.  
+
+</br>
+
+## 1.3 - Bibliografia Complementar
+
+Existem disponíveis na internet uma grande quantidade de material para o aprendizado do R. Além da documentação oficial (`https://cran.r-project.org/manuals.html`) estão disponíveis no CRAN (*The Comprehensive R Archive Network*) diversos tutoriais em vários idiomas (`https://cran.r-project.org/other-docs.html`).
+
+Uma compilação de tutoriais escritos em português pode ser obtida na página `http://goo.gl/wgmgFo`.
+
+Outra fonte é a página: `http://www.ats.ucla.edu/stat/r/`.
+
+</br>
+
+# CAPÍTULO 2 - ASPECTOS BÁSICOS DO R
+
+## 2.1 - ONDE OBTER AJUDA
+
+Algo com o qual o usuário do R deve se acostumar desde logo é consultar a ajuda das funções disponibilizadas pelo R. De fato, saber onde obter ajuda constitui uma das coisas mais importantes que se deve aprender a fazer.
+
+O RStudio oferece diversas facilidades para acessar a documentação de funções. Uma delas é colocar o cursor sobre a função para a qual se deseja consultar a ajuda e pressionar a tecla `F1`. A ajuda para função aparecerá na aba `Help` do painel inferior direito. Nesta aba é possível pesquisar as funções cuja ajuda se deseja obter.
+
+O Brasil possui uma lista de discussão bastante ativa chamada **R-Br** que pode
+ser acessada nos links a seguir:
+  
+* `http://r-br.2285057.n4.nabble.com/`  
+* `https://listas.inf.ufpr.br/cgi-bin/mailman/listinfo/r-br`
+  
+Além da lista de discussão nacional também existe a lista oficial do R que pode ser acessada a partir do *site* do R.  
+
+**Stack Overflow** também é uma importante fonte de informações. Consulte o link: 
+`http://pt.stackoverflow.com/questions/tagged/r`
+
+</br>
+
+## 2.2 - PRIMEIROS PASSOS
+
+Nesta seção iniciaremos os primeiros passos rumo ao aprendizado do R.
+
+
+### 2.2.1 Operações matemáticas
+
+O uso mais elementar que se pode fazer do R é utilizá-lo como uma calculadora. Crie no RStudio um arquivo de *script* digite os seguintes comandos e submeta para execução:
+
+```{r}
+12 + 48 - 178
+3 * 7 + 10
+45 / 7
+(4 + 6) / 2
+2 ^ 3
+```
+
+As contas são feitas seguindo-se as regras de precedência usuais: potências, multiplicação e divisão, soma e subtração.
+
+Os operadores matemáticos mais comuns são:
+
+Operador  | Significado
+--------- | -------------
+\+        | soma
+\-        | subtração
+\ *       | multiplicação
+\/        | divisão  
+\^        |	exponenciação  
+\%\%\     |	resto  
+\%\/\%    | divisão inteira  
+
+</br> 
+
+### Operador de atribuição (` <- `)
+
+Valores podem ser atribuídos a variáveis e estas podem ser utilizadas em cálculos. O símbolo `<-` é o operador de atribuição utilizado para atribuir valores a variáveis. No RStudio este operador pode ser criado utilizando-se a tecla de atalho **`Alt -`**.
+
+O símbolo `=` também pode ser utilizado com esta finalidade embora não seja recomendado. Vejamos alguns exemplos:
+
+
+```{r}
+# Atribui o valor 178 à variável 'num'
+num <- 178
+
+# Atribui à variável num seu valor anterior menos 100
+num <- num - 100
+num
+
+# Outra forma de utilização do operador de atribuição
+26 -> k 
+k
+```
+
+O simbolo `#` é utilizado pera inserir comentários nos *scripts*. O R irá ignorar tudo que venha depois desse símbolo
+
+No R não é necessário definir com antecedência as variáveis a serem utilizadas como é feito em outras linguagens de programação.
+
+</br>
+
+### 2.2.2 Nomes de variáveis
+
+Existem algumas restrições quanto aos nomes que podem ser utilizados para nomear variáveis. Não é possível criar variável que inicie por número ou por qualquer um dos seguintes caracteres:
+
+> \^, \!, \$, \@, \+, \-, \*, \/
+
+Algumas palavras especiais utilizadas pelo R também não podem ser utilizadas como nomes de variáveis. São elas:
+
+>`if`, `else`, `repeat`, `while`, `function`, `for`, `in`, `next`, `break`, `TRUE`, `FALSE`, `NULL`, `Inf`, `NaN`, `NA`, `NA_integer_`, `NA_real_`, `NA_complex_`, `NA_character_`.  
+
+Vamos testar algumas coisas: 
+ 
+```{r, eval=FALSE}
+8a <- 75
+@_novo <- sqrt(49)
+repeat <- 'repete'
+```
+
+Ao se escrever um *script* em R, ou em qualquer outra linguagem, é importante que se mantenha consistência na definição de nomes de varíaveis, nomes de funções, etc. Para ajudar neste quesito, existem alguns sites que dão boas dicas de como escolher bons nomes para variáveis, funções, etc.
+
+Algumas destas dicas podem ser consultadas nos seguintes sites:
+
+* http://google-styleguide.googlecode.com/svn/trunk/Rguide.xml   
+* http://r-pkgs.had.co.nz/style.html   
+* http://www.r-bloggers.com/consistent-naming-conventions-in-r/   
+
+Mas lembre-se: o que de fato importa é legibilidade do código. Assim, não tome estas orientações como verdade absoluta, mas como orientações gerais de como deixar o código mais legível.
+
+</br>  
+  
+### 2.2.3 Uso de funções
+
+A maior parte do tempo nossa interação com o R será feita mediante a utilização de funções, as quais são utilizadas para se fazer tudo no R. Uma função recebe argumentos como *input* e devolvem algo ou realizam alguma tarefa como resultado do processamento dos *inputs* recebidos. Por exemplo, suponha que desejamos calcular a raiz quadrada de 146:
+
+```{r}
+sqrt(146)
+```
+
+No R as funções tem a seguinte estrutura: `nomefuncao(arg_1 = valor_1, arg_2 = valor_2, ..., arg_n = valor_n)`. Tem-se o nome da função e uma lista de argumentos e valores separadas por vírgula entre parênteses. Algumas funções podem não possuir argumentos mas deve-se sempre colocar os parênteses. Um exempo de função que não possui argumento é `getwd()` utilizada para se obter o diretório de trabalho.
+
+Vejamos, por exemplo, a função `mean()` que retorna a média de um conjunto de números. Se consultarmos a ajuda desta função, veremos que ela é definida da seguinte forma: `mean(x, trim=0, na.rm=FALSE, ...)`.
+
+A função tem 3 argumentos (*inputs*): `x`, `trim` e `na.rm`. Como pode ser visto, alguns argumentos já tem valores pré-definidos. No caso da função `mean()` os argumentos `trim` e `na.rm` já tem valores *default* atribuidos a eles que poderão ou não ser alterados pelo usuário.
+
+O argumento `x` refere-se ao conjunto de dados para o qual se deseja calcular a média e o argumento `na.rm` informa à função se os valores faltantes, caso existam no conjunto de dados, devem ser excluídos. O argumento `trim` deve ser utilizado apenas se o usuário deseja calcular a média aparada.
+
+Se os valores a serem fornecidos à função o forem na ordem em que os argumentos foram definidos, não há necessidade de escrever o nome do argumento, caso contrário sim.
+
+Se passarmos os valores dos argumentos escrevendo os nomes dos mesmos não é necessário que os argumentos sejam passados à função na ordem em que foram definidos na função.  Vejamos alguns exemplos para esclarecer o que foi dito.
+
+Vamos criar um conjunto de dados para o qual desejamos calcular a média. Para isso, vamos utilizar a função `c()` que cria um vetor a partir dos valores inseridos como argumentos da função. (mais adiante explicaremos o que é um vetor):
+
+```{r}
+# criar um pequeno conjunto de dados chamado dados
+dados <- c(3, 5, 9, NA, 7, 16, 48)
+dados
+```
+
+Vamos agora usar a função `mean()` para calcular a média desses números. Para o caso em exame precisamos passar à função os valores para dois argumentos: `x` e `na.rm`. O argumento `trim` não precisa ter seu valor pré-definido modificado.
+
+```{r}
+mean(x=dados, na.rm=TRUE)
+mean(na.rm=TRUE, x=dados)
+```
+
+Como pode ser visto acima, nomeando-se os argumentos, estes podem ser passados à função em qualquer ordem. Sem nomeá-los devemos passá-los na ordem em que foram definidos na função. Exemplo:
+
+```{r}
+mean(dados, , TRUE)
+```
+
+Como não passamos valores para o argumento `trim` foi necessário deixar sua posição em branco. Mas, na prática, o que faríamos é:
+
+```{r}
+mean(dados, na.rm=TRUE)
+```
+
+Apenas relembrando: a lista de argumentos e valores são sempre separados por vírgula e deverão estar sempre entre de parênteses. 
+
+Mais alguns exemplos de uso de funções:
+
+```{r}
+# Exibe o diretório de trabalho
+getwd()
+
+# Exibe no console as variáveis existentes na área de trabalho
+ls()
+
+# Disponibiliza para uso o conjunto de dados interno do R chamado 'mtcars'
+data(mtcars)
+
+# Exibe os registros iniciais do conjunto de dados 'mtcars'
+head(mtcars)
+
+# Retrna o número de observações existentes no conjunto de dados 'mtcars'
+nrow(mtcars)
+```
+
+Mais adiante apresentaremos uma relação de funções para consulta. 
+
+</br>
+
+### 2.2.4 Gráficos
+
+O R também permite a realização de gráficos de forma muito simples. Para ilustrar, apresentamos a seguir um diagrama de dispersão o qual é elaborado com a função `plot()`.
+
+```{r, fig.align='center', fig.height=4, fig.width=4}
+plot(mpg ~ wt, data=mtcars, pch=16, main="Meu Primeiro Gráfico")
+grid(col = 'blue') # Adiciona linhas de grade azuis ao gráfico
+```
+
+Com a função `boxplot()` podemos criar um boxplot da seguinte forma:
+
+```{r, fig.align='center', fig.height=4, fig.width=3}
+boxplot(mpg ~ cyl, data=mtcars,
+        main='Boxplot',
+        xlab='Número de Cilindros',
+        ylab='Milhas por Galão',
+        col='lightgreen',
+        cex.lab=0.7, cex.axis=0.7)
+
+```
+
+No capítulo 3 estudaremos a construção de gráficos em maior detalhe.
+
+</br>
+
+### 2.2.5 Área de trabalho
+
+A área de trabalho é o ambiente no qual as variáveis criadas durante o uso do R estarão armazenadas. Este ambiente é denominado `.GlobalEnv`.
+
+Para consultarmos as variáveis existentes na área de trabalho utilizamos a função `ls()`
+
+```{r}
+ls()
+```
+
+Para removermos uma ou mais variáveis da área de trabalho basta passar o nome da(s) variável(eis) a ser(em) removida(s) à função `rm()`. Exemplo:
+
+```{r}
+rm(k, num)
+ls()
+```
+
+Para remover todas as variáveis da área de trabalho podemos utilizar o seguinte combinação de funções:
+
+```{r}
+rm(list=ls())
+```
+
+Na aba `Environment` do painel superior direito do RStudio estarão evidenciados todos os objetos disponíveis na área de trabalho.
+
+</br>
+
+### 2.2.6 Pacotes
+
+Dito de forma simples, pacotes são conjuntos de funções escritas para a realização de determinada tarefa. Quanto o R é instalado, ele já dispõe de um conjunto inicial de pacotes denominados *pacotes recomendados*. Outros pacotes podem ser adicionados pelo usuário a qualquer tempo.
+
+Os pacotes estão disponíveis gratuitamente na internet, num repositório denominado CRAN (Compreensive R Archive Network) cujo endereço na internet é `https://cran.r-project.org/mirrors.html`. Além do CRAN, diversos pacotes estão hospedados em repositórios individuais no `GitHub`. Por exemplo o pacote  `bookdown` está hospedado no seguinte repositório: `https://github.com/rstudio/bookdown`  
+
+Para instalar pacotes no R utiliza-se a função `install.packages()`.
+
+Na aba `Packages` do painel inferior direito do RStudio o usuário poderá, além de consultar a relação dos pacotes já instalados em seu computador, instalar novos pacotes utilizando o botão `Install` ou atualizar os pacotes já instalados (botão `Update`).
+
+Ao clicar sobre o nome do pacote o usuário é apresentado à página de ajuda do pacote, a qual contém a relação de todas as funções existentes no referido pacote. Clicando sobre a função, chaga-se à página de ajuda da função.
+
+Para remover pacotes utiliza-se a função `remove.packages()`.
+
+Todas as funções com as quais iremos trabalhar no R estarão armazenadas em pacotes. Como já dito anteriormente alguns pacotes já estão pré-instalados e alguns destes pacotes já são carregados automaticamente toda vez que o R é inicializado. Estes pacotes são: "stats", "graphics", "grDevices", "utils", "datasets",  "methods", "base". As funções contidas nestes pacotes estão prontamente disponíveis para uso.
+
+Por exemplo, o pacote `foreign` é um dos pacotes já pré-instalados mas suas funções não estão disponíveis para uso. Para que suas funções fiquem disponíveis é necessário "carregá-lo" para a memória do computador  o que é feito utilizando-se a função `library()`:
+
+```{r}
+library(foreign)
+```
+
+Agora as funções contidas neste pacote estão disponíveis para uso.
+
+Um pacote é instalado apenas uma vez, mas para que seja possível utilizar suas funções será necessário carregá-lo todas as vezes que iniciarmos uma sessão no R.
+
+</br>
+  
+## 2.3 - ESTRUTURAS DE DADOS
+  
+O R dispõe de algumas estruturas de dados nos quais estes podem ser armazenados. Estas estruturas são: *vetores*, *listas*, *data frames*, *matrizes* e *arrays*.
+
+
+### 2.3.1 Vetores   
+
+Os vetores são a estrutura de dados mais simples do R. Podem ser construídos, além de outras, com as seguintes funções: `c()`, `rep()`, `seq()` ou com o operador `:`.
+
+Em um vetor todos os valores devem ser do mesmo tipo, ou seja. todos os valores devem ser valores numéricos (`numeric`), caracteres (`character`), valores lógicos (`logical`) ou números complexos (`complex`). 
+
+Os vetores possuem 3 propriedades:    
+
+* seu __comprimento__, ou seja, a quantidade de elementos que ele possui;        
+* __tipo de dados__ armazenados; e         
+* __atributos__, metadados adicionais que podem ser incluídos nos vetores como nomes.         
+
+Estes atributos podem ser consultados/obtidos com as seguintes funções: `length()` `typeof()` e `attributes()`. Vejamos alguns exemplos:
+
+```{r}
+pessoas <- c('Alberto', 'Carlos', 'Francisco', 'José')
+pessoas
+length(pessoas)
+typeof(pessoas)
+attributes(pessoas)
+```
+
+Vamos atribuir nomes aos elementos do vetor acima e um comentário para o vetor:
+
+```{r}
+pessoas2 <- c(nome1='Alberto', nome2='Carlos', nome3='Francisco', nome4='José')
+comment(pessoas2) <- 'Turma 1'
+attributes(pessoas2)
+names(pessoas2)
+```
+
+Outros vetores:
+
+```{r}
+x <- 20:1
+x
+typeof(x)
+y <- x + pi
+typeof(y)
+typeof(c(TRUE, FALSE, FALSE, TRUE))
+```
+
+Vamos tentar montar um vetor com dados de diferentes tipos:
+
+```{r}
+ff <- c('Maria', 8, TRUE)
+ff
+typeof(ff)
+```
+
+Para acessar elementos de um vetor, podemos fazê-lo das seguintes formas:
+
+**1** - Fazendo referência à posição dos elementos no vetor (indexação por posição). Por exemplo:
+
+```{r}
+vec1 <- c(3, 5, 8, 7, 9, 16, 40)
+
+## acessar o 2o elemento
+vec1[2]
+
+## acessar o 3o e 5o elementos
+vec1[c(3, 5)]
+
+## acessar o último elemento
+vec1[length(vec1)]
+
+## e se tentarmos o elemento 0 ou o elemento 10?
+vec1[0]
+vec1[10]
+```
+
+Também é possível excluir elementos indicando os elementos a serem excluídos precedidos de um sinal de menos. Por exemplo, suponha que desejamos excluir o premeiro e o último elemento do vetor `vec1`:
+
+```{r}
+vec1[-c(1, length(vec1))]
+```
+
+**2** - Associando os valores lógicos `TRUE` ou `FALSE` aos elementos que devem permanecer ou sair do vetor, respectivamente. (indexação lógica). Exemplos:
+
+```{r}
+vec1[c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE)]
+
+## Usando isso de forma mais interessante...
+## Quais são elementos vec1 maiores que 10?
+posicao <- vec1 > 10
+posicao
+vec1[posicao]
+
+## De maneira mais abreviada...
+vec1[vec1 > 10]
+```
+
+**3** - Fazendo referência aos nomes dos elementos do vetor, caso os elementos estejam nomeados. (indexação por nomes)
+
+```{r}
+pessoas2[c('nome1', 'nome3')]
+```
+
+Quando se utiliza a indexação por nomes não é possível utilizar a exclusão de valores utilizando o sinal de menos.  
+
+### 2.3.2 Vetorização
+  
+Uma característica importante do R é que ele opera de forma vetorizada, ou seja, as operações são realizadas em todos os elementos de um vetor simultaneamente.
+
+```{r}
+# Definição de um vetor
+anos <- c(1800, 1850, 1900, 1950, 2000)
+
+# Definição de outro vetor
+carbono <- c(8, 54, 534, 1630, 6611)
+
+# Realização de uma operação de subtração
+anos - 1000
+
+# Soma
+anos + carbono
+```
+
+O R utiliza a denominada **regra da reciclagem** que significa que em uma operação com dois vetores de tamanhos diferentes, o menor será *reciclado* até chegar ao tamanho do maior. A reciclagem é feita adicionando-se ao fim do menor vetor os valores iniciais deste mesmo vetor. Exemplo:
+
+```{r}
+a <- c(2, 3, 4, 5, 6)
+b <- c(1, 2)
+
+a + b
+```
+
+Nesta operação o vetor `b` foi reciclado para ficar da seguinte forma: `(1, 2, 1, 2, 1)` e então adicionado ao vetor `a`.
+
+
+
+
+
+</br>
+
+### 2.3.3 Matrizes      
+
+São estruturas de dados bidimensionais que, da mesma forma que os vetores, armazenam dados que sejam do mesmo tipo.
+
+As matrizes são construídas com a função `matrix()`. Por exemplo, a matriz
+
+$$
+\left[ \begin{array}{rrr}
+          1 & 3 &  0 \\
+          2 & 4 & -2
+        \end{array}
+\right]
+$$
+
+poderia ser construída no R da seguinte forma:
+ 
+```{r}
+mat <- matrix(c(1, 2, 3, 4, 0, -2), ncol=3)
+mat
+```
+
+Por padrão, as células das matrizes são preenchidas por colunas. 
+
+Fica como tarefa verificar como fazer a função preencher a matriz por linhas.
+
+Matrizes também podem ser criadas a partir de vetores, com a utilização das funções `cbind()` e `rbind()`. Os exemplos a seguir, ilustram esta possibilidade:
+
+```{r}
+## rbind()
+m1 <- rbind(c(1, 3, 0),
+            c(2, 4, -2))
+m1
+typeof(m1)
+class(m1)
+
+## cbind()
+m2 <- cbind(c(1, 2), c(3, 4), c(0, -2))
+m2
+```
+
+Existem funções que permitem operações com matrizes (multiplicação de matrizes, cálculo do determinante, etc). Uma função muito útil é a função `t()` que realiza a transposição de uma matriz.
+
+A função `class()` nos informa a **classe** de um objeto, não fornecendo informações sobre o tipo de dado, informação dada pela função `typeof()`. 
+
+**Nota:** A classe de um objeto define as operações que poderão ser realizadas nos mesmos bem como suas propriedades. A classe de um objeto tem relação com o paradigma de programação orientado a objetos.
+
+```{r}
+t(mat)
+```
+
+Em essência, as matrizes são vetores com um atributo dimensão associado. 
+
+```{r}
+x <- 1:10
+class(x)
+attr(x,"dim") <- c(2, 5)
+class(x)
+```
+
+Para se acessar os elementos de uma matriz faz-se referência aos indices do item que se queira acessar. Por exemplo, supondo que na matriz `x` $2x5$ criada anteriormente, quiséssemos acessar o elemento que esteja na 2a linha e 3a coluna, faz-se:
+
+```{r}
+x[2, 3]
+```
+
+</br>
+
+### 2.3.4 Array
+
+Os *arrays* são estruturas semelhantes às matrizes mas podem possuir mais de duas dimensões. Em essência é um vetor multidimensional. A construção de *arrays* dá-se com a utilização da função `array()`. Exemplo: 
+
+```{r}
+array(1:18,
+      dim = c(3, 3, 2),
+      dimnames = list(c('linha1', 'linha2', 'linha3'),
+                      c('coluna1', 'coluna2', 'coluna3'),
+                      c('planilha1', 'planilha2')))
+```
+
+Em teoria, os *arrays* podem ter qualquer número de dimensões, mas na prática trabalhar com *arrays* com mais de 3 dimensões é muito difícil.
+
+</br>
+
+### 2.3.5 Lista
+
+A lista é a estrutura de dados mais flexível do R. Pode armazenar dados de tipos diferentes, contidos em qualquer uma das estruturas de dados do R.
+
+Exemplos:
+
+```{r}
+list(1, 2, 3)
+
+list(c(1, 2, 3))
+
+escola <- list(
+  alunos = c('João', 'Maria', 'Ana'),
+  idades = c(13, 14, 12),
+  escola = 'Colégio ECG-TCERJ',
+  notas =  array(c(7, 2, 9,   6, 4, 9,   6, 7, 8,  7, 5, 4,  
+                   8, 7, 8,   8, 7, 5,   9, 8, 8,  6, 4, 9,
+                   6, 7, 5,   8, 7, 8,   4, 8, 7,  9, 6, 8),
+                 dim = c(3, 4, 3),
+                 dimnames = list(
+                            c('João', 'Maria', 'Ana'),
+                            c('Português', 'Matemática', 'Ciências', 'Artes'),
+                            c('B1', 'B2', 'B3'))))
+                    
+                     
+escola
+```
+
+Os componentes de uma lista podem ser acessados da seguinte forma:
+
+```{r}
+## acesso pelo nome do componente...
+escola[['alunos']]
+escola['alunos']
+
+class(escola[['alunos']]) ## acessa o conteúdo do componente...
+class(escola['alunos'])   ## retorna o componente..
+
+## acesso pela posição do componente na lista...
+escola[[1]]
+
+## acesso usando o operador $
+escola$idades
+
+escola$notas[,,'B1'] ## acessa o primeiro bimestre...
+escola$notas['João', , ]
+```
+
+</br>
+
+### 2.3.5 Data frame       
+
+O `data frame` é uma lista especial onde cada componente é um vetor e todos tem o mesmo tamanho. As colunas do `data frame`podem ser vetores de quaisquer tipos.
+
+Esta estrutura de dados é adequada para armazenar dados que se apresentem em uma estrutura retangular com linhas e colunas.
+
+O `data frame` pode ser criado com a função `data.frame()`. As funções de importação de dados em geral retornam `data frame`.
+
+Exemplo:
+
+```{r}
+dados_alunos <- data.frame(alunos = c('João', 'Maria', 'Ana'),
+                           idades = c(13, 14, 12),
+                           sexo   = c('M', 'F', 'F'),
+                           serie  = c('5o ano', '6o ano', '5o ano'),
+                           stringsAsFactors = FALSE)
+
+dados_alunos
+class(dados_alunos)
+str(dados_alunos)
+```
+
+O acesso aos dados contidos em um data frame podem ser feitos de forma análoga a das matrizes. Por exemplo, para acessar o elemento que está na 3a linha e 2a coluna do data frame `dados_alunos`, faz-se da seguinte forma:
+
+```{r}
+dados_alunos[3, 2]
+```
+
+Para acessar toda uma linha ou coluna, pode-se fazer:
+
+```{r}
+dados_alunos[1,] # primeira linha
+dados_alunos[,3] # terceira coluna
+dados_alunos[c(1, 2), 3] # primeira e segunda linha da terceira coluna
+```
+
+Como visto para os vetores, a indexação por nomes e lógica também são aplicáveis. Exemplo:
+
+```{r}
+# indexação lógica
+dados_alunos[dados_alunos$sexo == 'F',]
+dados_alunos[, c(TRUE, FALSE, TRUE, FALSE)]
+dados_alunos
+
+# indexação por nomes
+dados_alunos[c(1, 3), c('alunos', 'serie')]
+```
+
+
+</br>
+
+## 2.4 - TIPOS DE DADOS 
+
+Os dados utilizados pelo R podem ser dos seguintes tipos: `numeric`, `logical`, `character`, `complex` e `raw`. O tipo numérico pode ser inteiro (`integer`) ou ponto flutuante (`double`). A função `typeof()` nos informam o tipo do dado.
+
+Exemplos:
+
+```{r}
+typeof(mat)
+typeof(c(8L, 76L, 49L, 26L))
+typeof(c(8, 76, 49, 26))
+
+sexo <-  factor(c('Masculino', 'Feminino', 'Feminino', 'Masculino', 'Masculino'))
+typeof(sexo)
+class(sexo)
+```
+
+Alguns tipos de dados podem ser convertidos para um outro tipo de dados. Por exemplo, um vetor numérico pode ser convertido para caracteres, um vetor lógico para numérico. Esta conversão é feita utilizando as seguintes funções: `as.character()`, `as.numeric()`, `as.logic()`, `as.complex()`, etc.
+
+Exemplo:
+
+```{r}
+## conversão de número para caractere
+num <- c(5, 10, 20, 40.18)
+num
+as.character(num)
+
+## conversão de lógigo para numérico
+logico <- c(TRUE, FALSE, FALSE, TRUE, TRUE)
+logico
+as.numeric(logico)
+```
+
+Para uma relação completa das funções de conversão digite `apropos('^as\\.')` no console.
+
+</br>
+
+## 2.5 - FUNÇÕES DIVERSAS E OPERADORES 
+  
+O R dispõe de um amplo conjunto de funções matemáticas, estatísticas e outras.
+Algumas destas funções estão elencadas a seguir:
+
+### 2.5.1 Funções Matemáticas  
+
+Função      | Descrição
+------------|---------------------------  
+`abs()`     | calcula o valor absoluto  
+`sqrt()`    | calcula a raiz quadrada  
+`exp()`     | calcula o valor da função exponencial  
+`log()`     | calcula o logaritmo   
+`log10()`   | calcula o logaritmo na base 10  
+`log2()`    | calcula o logaritmo na base 2  
+`cos()`     | calcula o cosseno 
+`sin()`     | calcula o seno  
+`tan()`     | calcula a tangente  
+`sum()`     | calcula a soma dos elementos de um vetor  
+`prod()`    | calcula o produto dos elementos de um vetor  
+
+Exemplos:
+
+```{r}
+abs(3 * 5 - 55)
+sqrt(144)
+log(sqrt(49))
+round(sin(pi),0)
+round(cos(pi),0)
+prod(c(2, 5, 2, 3))
+sum(c(2, 5, 2, 3))
+```
+
+</br>
+
+### 2.5.2 Funções Estatísticas
+
+Função        | Descrição
+--------------|---------------------------  
+`range()`     | retorna os valores mínimo e máximo  
+`mean()`      | retorna a média  
+`median()`    | retorna a mediana  
+`min()`       | retorna o valor mínimo  
+`max()`       | retorna o valor máximo  
+`var()`       | retorna a variância  
+`sd()`        | retorna o desvio padrão  
+`quantile()`  | retorna separatrizes (quartis, decis, percentis, etc.)   
+`IQR()`       | retorna o intervalo interquartil   
+`summary()`   | retorna um conjunto de estatísticas descritivas  
+
+Exemplos:
+```{r}
+# Cria um vetor e números
+idades <- c(27, 45, 36, 19, 32, 55, 26, 31, 65, 27, 46)
+min(idades)
+max(idades)
+range(idades)
+mean(idades)
+summary(idades)
+quantile(idades, probs = 0.75) 
+quantile(idades, probs = seq(0, 1, 0.1))
+```
+
+
+</br>
+
+### 2.5.3 Funções para Operações com Conjuntos
+
+Função                 | Descrição
+-----------------------|---------------------------  
+`union(x, y)`          | união dos elementos contidos objetos `x` e `y`  
+`intersect(x, y)`      | interseção dos elementos contidos em `x`e `y`  
+`setdiff(x, y)`        | elementos que estão em `x` e não estão em `y`   
+`setequal(x, y)`       | retorna verdadeiro se `x` e `y` são iguais
+`is.element(el, set)`  | retorna verdadeiro se um elemento `el` pertence ao conjunto `set`  
+
+Exemplos:
+
+```{r}
+# Cria dois vetores de caracteres
+v1 <- c('João', 'Carlos', 'Leandro', 'Pedro', 'Francisco', 'Joana', 'Karine', 'Renata')
+v2 <- c('Josyanne', 'Renata', 'Pedro', 'Talita', 'Aline', 'Mariana')
+
+union(v1, v2)
+intersect(v1, v2)
+is.element(c('Leandro', 'Marcos'), v1)
+is.element('Leandro', v2)
+setequal(v1, v2)
+setequal(c(5, 12, 17), c(17, 5, 12))
+```
+
+
+</br>
+
+### 2.5.4 Funções Diversas
+
+Função          | Descrição  
+----------------|---------------------------------------------------------------    
+`floor()`       | retorna o inteiro imediatamente inferior     
+`ceiling()`     | retorna o inteiro imediatamente superior       
+`trunc()`       | retora a parte não fracionária do número       
+`round()`       | arredonda para o número de casas decimais especificada       
+`signif()`      | arredonda para o número de dígitos significativos especificado   
+`cumsum()`      | soma acumulada dos valores       
+`cumprod()`     | proudto acumulado dos valores     
+`cummax()`      | acumula preservando os valores máximos       
+`cummin()`      | acumula preservando os valores mínimos       
+`diff()`        | retorna a diferença entre valores     
+`sign()`        | retorna um vetor contendo o sinal dos elementos de um vetor   
+`sort()`        | ordena os elementos do objeto fornecido como argumento      
+
+Exemplos:
+
+```{r}
+tt <- c(2, 5, 7, 9, 3, 4, 4)
+cumsum(tt)
+cummax(tt)
+cummin(tt)
+diff(tt)
+sort(tt, decreasing = TRUE)
+```
+
+</br>
+
+### 2.5.5 Operadores para Comparação
+
+Operador |  Significado
+-------- | ---------------------------------------------------------------------
+\>  	   | maior que
+\<       | menor que
+\>\=     | maior ou igual
+\<\=     | menor ou igual
+\!\=     | diferente
+\=\=     | igual
+
+Exemplos:
+
+```{r}
+'A' < 'B'
+'Z' > 'Q'
+c(4, 7, 6, 12) == c(2, 7, 4, 8)
+```
+
+</br> 
+
+### 2.5.6 Operadores Lógicos
+  
+Operador     | Significado
+-------------|------------------------------------------------------------------
+`&`          | e    
+`|`          | ou   
+`!`          | negação  
+`xor()`      | retorna TRUE se exatamente um valor é verdadeiro  
+`any()`      | retrona TRUE se ao menos um valor é verdadeiro    
+`all()`      | retorna TRUE se todos os valores são verdadeiros  
+`isTRUE()`   | testa se é `TRUE` (não vetorizado)   
+
+Exemplos:
+
+```{r}
+7 > 5 & 12 < pi
+1:5 > 2
+!(1:5 > 2)
+isTRUE(1:5 > 2)
+isTRUE(5 > 2)
+```
+
+Para mais informações consultar a ajuda para `Syntax`, `Arithmetic` e `Logic`
+
+</br>
+
+Outras funções de interesse são: `is.factor()`, `is.character()`, `is.numeric()`, etc. Estas funções testam um objeto para verificar se os valores são, respectivamente, fatores, caracteres ou números. Para uma lista completa deste tipo de função digite `apropos('^is\\.')` no console.
+
+</br>
+  
+## 2.6 - VALORES ESPECIAS
+  
+O R possui alguns valores que são considerados especiais. São eles: `NULL`, `NA`, `Inf` e `NaN`.
+
+### 2.6.1 `NA`
+
+`NA` (*not available*) é o valor utilizado pelo R para indicar que um valor está faltando.
+
+Representa um valor *missing*. Para testar a existência de `NA` utiliza-se a função `is.na()`.
+
+É um erro muito comum tentar testar a existência de `NA` utilizando o operador lógico `==`. Veja o exemplo a seguir: 
+
+```{r}
+z <- c(1:3,NA)
+is.na(z)
+z == NA    # Não funciona
+z[z == NA] # Não funciona
+```
+
+</br>
+
+### 2.6.2 `NaN`
+
+`NaN` (*not a number*) é um tipo de valor faltante que se origina na operação com
+valores numéricos. A função `is.na()` também retorna `TRUE` para `NaN` ao passo
+que `is.nan()` testa apenas para `NaN`.
+
+```{r}
+# Exemplo
+0/0
+Inf - Inf
+log(-3)
+```
+
+</br>
+
+### 2.6.3 `NULL`
+
+`NULL` representa o objeto nulo. Pode ser usado para remover componentes em listas ou colunas em dataframes.   
+
+`Inf` e `-Inf` representam infinito.  
+
+```{r}
+# Exemplo 
+x <- list("a", 1:5, c("p", "q", "r"))
+x[[2]] <- NULL # Remove o segundo componente da lista.
+x
+5/0
+```
+
+</br>
+
+## 2.7 - EXERCÍCIOS  
+
+</br>
+
+2.7.1 - Execute as seguintes tarefas:  
+
+(a) Calcule a raiz quadrada de 729.    
+(b) Obtenha o resto da divisão de 150 por 4.    
+(c) Crie uma variável `b` contendo o valor 1947.    
+(d) Converta a variável `b` para o tipo caractere.    
+(e) Defina o diretório de trabalho para `C:\Temp`     
+(f) Crie um vetor numérico contendo os valores de 1 a 6 e mostre a sua classe.    
+(g) Inicialize um vetor de caracteres de tamanho 26.    
+(h) Exiba todos os objetos criados na área de trabalho.   
+(i) Remova, de uma única vez, todos os objetos da área de trabalho.  
+
+</br>
+
+2.7.2 - Considere o vetor `x`, definido como `x <- c(5,9,2,3,4,6,7,0,8,12,2,9)`. Verifique se você compreendeu como funciona o mecanismo de *subseting* em vetores tentando antecipar quais os resultados dos comandos a seguir.
+
+```
+x[2]    
+x[2:4]    
+x[c(2,3,6)]    
+x[c(1:5,10:12)]     
+x[-(10:12)]     
+```
+
+Use o R para conferir suas respostas.
+ 
+</br>
+
+2.7.3 - Dadas as matrizes `X` e `Y` definidas a seguir:
+
+$$ 
+X = \left[\begin{array}{rr}
+                  3 & 2 \\
+                  1 & 1 
+          \end{array}\right] \quad Y = \left[\begin{array}{rrr}
+                  1 & 4 & 0 \\
+                  0 & 1 & 1
+          \end{array}\right] 
+$$  
+
+
+Verifique se você compreendeu corretamente o mecanismo de *subseting* em matrizes tentando antecipara o resultado das seguintes operações: 
+
+```
+X[1,]
+X[2,]
+X[,2]
+Y[1,2]
+Y[,2:3]
+```
+
+Use o R para conferir suas respostas.
+
+</br>
+
+2.7.4 - Obtenha as seguintes somas:
+
+$\sum_{i = 1}^{100}(i^3 + 4i^2)$ e  
+
+$\sum_{i=1}^{25}(\frac{2^i}{i} + \frac{3^i}{i^2})$    
+
+</br>
+
+2.7.5 - Utilizando a função `c()` e o operador `:`, obtenha a seguinte sequência: `1,2,3,...,19,20,19,18,...,2,1`    
+
+</br>
+
+2.7.6 - Considere o vetor `x` definido a seguir: 
+
+```{r}
+set.seed(50)
+x <- sample(0:999, 250, replace=TRUE)
+```
+
+(a) - Selecione os valores de `x` > 600  
+(b) - Selecione o último elemento do vetor  
+(c) - Obtenha os elementos de `x` que estejam nas posições 1, 4, 12 e 17  
+
+</br>
+
+2.7.7 - A função `rep()` é utilizada para replicar elementos de vetores. Por exemplo:
+
+```{r}
+rep(c('A', 'B', 'C'), c(3, 3, 3))
+rep(1:4, c(2,3,4,5))
+```
+
+Como poderia ser gerada a sequência `4,6,3, 4,6,3,...,4,6,3` onde cada um dos dígitos `4`, `6`, `3` ocorrem 10 vezes
+
+</br>
+
+2.7.8 - No exemplo da escola, como seria possível obter, para cada aluno e matéria, a soma das notas nos 3 bimestres?
+
+</br>
+
+# CAPÍTULO 3 - ENTRADA E SAÍDA DE DADOS
+
+</br>
+
+## 3.1 - TIPOS DE ARQUIVOS DE DADOS
+
+Antes de ilustrar como os dados podem ser importados pelo R, convém fazer algumas considerações sobre os tipos de arquivos nos quais os dados (numéricos e textuais) são armazenados, já que as funções utilizadas para realizar a importação desses dados dependerão desse fato.
+
+Os arquivos de dados mais comumente encontrados na prática são os seguintes:
+
+* arquivos texto com valores separados por delimitadores (ex. `.csv`);  
+* arquivos texto com formato fixo;      
+* arquivos texto com com marcação de tags (`.html`, `.xml`, `.kml`);  
+* arquivos texto _JavaScript Object Notation_ (`.json`);
+* arquivos do excel (`.xls`, `.xlsx`);
+* arquivos de bancos de dados (Access, SQLite, etc.);  
+* arquivos de aplicativos estatísticos (Stata, SPSS, etc.).  
+
+</br>
+
+## 3.2 - IMPORTAÇÃO E EXPORTAÇÃO DE DADOS
+
+Neste tópico serão vistas as funções disponíveis para a importação e exportação de dados.
+
+Mostraremos como importar os tipos mais comuns de arquivos. Arquivos `.json`, `.html`, `.xml` e `kml` não serão tratados neste curso.
+
+</br>
+
+### 3.2.1 Arquivos texto com delimitadores
+
+Estes arquivos tem como característica a fato de que os dados são separados por um caractere delimitador, usualmente a vírgula (`,`), o ponto e vírgula (`;`), o caractere `\t` que representa a tabulação e o pipe `|`. 
+
+A principal função nativa do R para a importação de arquivos com esta estrutura á a função `read.table()`. Esta função tem uma grande quantidade de parâmetros com valores *default* que devem ser modificados pelo usuário dependendo da estrutura do arquivo de dados a ser importado.
+
+Além dessa função, existem as funções `read.csv()`, `read.csv2()` e `read.delim()` que são versões da função `read.table()` com alterações no valor `default` de alguns parâmetros.
+
+Para ilustrar o uso da função `read.table()` utilizaremos o arquivo `Receita_Municipios_RJ_2013.txt` que é um arquivo cujo delimitador é o caractere `\t` (tabulação). Sua importação pode ser feita da seguinte forma:
+
+```{r}
+# Definição do diretório de trabalho
+diretorio <- "C:\\Users\\Marcos\\Dropbox\\1. Cursos ECG\\Intro-R Treinamento TCE-MT\\3.dados"
+setwd(diretorio)
+
+# Importação dos dados
+receitas <- read.table('Receita_Municipios_RJ_2013.txt',
+                       sep='\t', header = TRUE,  comment.char = '')
+head(receitas[,c(1, 2, 4)])
+```
+
+Vamos apresentar a seguir uma tabela com os principais argumentos desta função e os valores a serem passados à mesma:
+
+Argumento     | Valor  
+--------------|----------------------------------------------------------------------------------------------------------
+`file`        | string contendo o caminho até o arquivo a ser importado           
+`header`      | informa à função se a primeira linha do arquivo contém os nomes das colunas. O valor *default* é `FALSE`
+`sep`         | informa à função o caractere a ser usado como delimitador. O valor `default` e `" "`     
+`quote`       | informa à função o caractere utilizado para delimitar strings que contenham valores especiais. 
+`dec`         | informa à função o caractere separador de decimal    
+`row.names`   | informa à função qual variável deve ser considerada para dar nome aos registros    
+`col.names`   | passa á função os nomes das variáveis 
+`as.is`       | informa à função para realizar a importação dos dados no formato que estão 
+`na.strings`  | informa à função os caracteres que devem ser considerados valores faltantes    
+`colClasses`  | informa à função as classes das variáveis a serem importadsas    
+`nrows`       | informa a quantidade de linhas a serem importadas    
+`skip`        | informa à função a quantidadade de registros iniciais do arquivo devem se ignorados. 
+`strip.white` | informa à funãção que os caracteres brancos devem ser removidos dos dados     
+`comment.char`| informa à função quais caracteres estão sendo utilizado para designar valores faltantes. O valor *default* é `NA`  
+
+Arquivos com outros delimitadores também podem ser importados com a função `read.table()`, bastando definir o parâmetro `sep=` para o separador adequado. Delimitadores usuais são: `;`, `,`, `' '` e `|`.
+
+Para exportarmos dados, utilizamos a função `write.table()`. Para exportarmos o conjunto de dados `receitas` que acabamos de importar, pode-se proceder da seguinte forma:
+
+```{r}
+setwd(diretorio)
+write.table(receitas, file='receitas.csv', sep=';', row.names=FALSE)
+```
+
+O conjunto de dados foi exportado no formato `.csv`. Também estão disponíveis as funções `write.csv()`e `write.csv2()`.
+
+Estas funções podem importar dados que estejam hospedados em sites na internet com protocolo `http`. 
+
+No exemplo a seguir será visto como importar dados do *site* do [Senado Federal](http://www.senado.gov.br/transparencia/dadosAbertos/dadosAbertos.asp). Especificamente, serão importados dados relativos aos contratos celebrados pelo Senado disponíveis em seu portal de transparência.
+
+```{r, eval=FALSE}
+arquivo <- 'http://www.senado.gov.br/transparencia/LAI/licitacoes/contratos.csv'
+contratos <- read.csv2(arquivo, skip=1, as.is = TRUE)
+head(contratos)
+dim(contratos)
+```
+
+</br>
+
+### 3.2.2 Importação de arquivos do Excel
+
+O R não possui funções nativas para a importação ou exportação de dados para o foramto de arquivo do Excel. Não obstante, existem pacotes que realizam esta tarefa. Nestas notas serão utilizados dois pacotes: `readxl` e `openxlsx`. O pacote `readxl` somente tem a funcionalidade de leitura de dados e o `openxlsx` possui as funcionalidades de leitura e escrita de dados. No Anexo IV apresentamos com maiore datalhes como utilizar o pacote `openxlsx`.
+
+Como estes pacotes não são pré-instalados, será necessário instalá-los, o que pode ser feito da seguinte forma:
+
+```{r, eval=FALSE}
+install.packages(c('readxl', 'openxlsx'))
+```
+
+Uma outra forma de instalar estes pacotes é com a utilização do botão `Install` existente na aba `Packages` do painel inferior direito do RStudio.
+
+Uma vez instalados os pacotes, para disponibilizar as funções para uso é necessário carregar os pacotes. Isto é feito da seguinte forma:
+
+```{r}
+library(readxl)
+library(openxlsx)
+```
+
+Para realizar a importação dos dados contidos no arquivo `precos_acoes_petrobras.xlsx` utilizando-se a função `read_excel()` do pacote `readxl` pode-se proceder da seguinte forma:
+
+```{r}
+setwd(diretorio)
+acoes_petrobras <- read_excel('precos_acoes_petrobras.xlsx')
+tail(acoes_petrobras)
+```
+
+Com o pacote `openxlsx` a importação dos dados pode ser feita da seguinte forma:
+
+```{r}
+setwd(diretorio)
+bolsa_valores <- read.xlsx("tui.xlsx", sheet = 1)
+```
+
+A exportação de dados para arquivo do excel com este pacote pode ser feita da seguinte forma.
+
+```{r}
+setwd(diretorio)
+write.xlsx(mtcars, file="mtcars.xlsx",  sheet="mtcars")
+```
+
+Outro pacote que pode ser utilizado para trabalhar com arquivos do Excel é o `XLConnect` para o qual o usuário poderá obter informações no site `http://www.mirai-solutions.com/site/index.cfm?id_art=66328`. O tutorial deste pacote pode ser baixado no seguinte site: `http://cran.r-project.org/web/packages/XLConnect/vignettes/XLConnect.pdf`.
+
+**Nota:** O pacote `openxlsx` não possui dependência do java como o `XLConnect` mas exige que se tenha um aplicativo para compactação de arquivos na `search path` do windows ou o aplicativo [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/) instalado.
+
+</br>
+
+### 3.2.3 Importar da área de transferência
+
+Uma possibilidade é a importação de dados que foram copiados para a área de transferência do Windows. Esta possibilidade é utilizada para importar dados contidos em planilhas do excel que tenham sido copiados para a área de transferência. 
+
+Este procedimento será ilustrado com o conjunto de dados `tui.xls`. Após copiar todo o conteúdo da planilha, executa-se o código a seguir:
+
+```{r, eval=FALSE}
+acoes <- read.delim2("clipboard")
+```
+
+</br>
+
+### 3.2.4 Arquivos texto de formato fixo
+
+Arquivos texto de formato fixo são arquivos nos quais os dados ocupam tamanho fixo em cada linha do arquivo.
+
+Para a importação de arquivos desta natureza é necessário que se disponha do dicionário de variáveis, que é o documento onde estarão especificadas quais variáveis estão representadas no arquivo, a posição de início de cada variável no arquivo e o comprimento de cada variável. 
+
+O arquivo `Arfile.ASC` constante do rol de arquivos que serão utilizados no curso é deste tipo. O dicionário deste arquivo de dados consta do documento `Descricao Arquivos Dados_v2.doc` também disponibilizado.
+
+Este tipo de arquivo é utilizado, por exemplo, para armazenar os microdados da PNAD, do Censo Escolar, etc.
+
+O arquivo `Arfile.ASC` pode ser importado da seguinte forma:
+
+```{r}
+## Definir o diretório de trabalho
+setwd(diretorio)
+
+contas_receber <- read.fwf('Arfile.ASC',
+                           widths=c(11, 4, 4, 15, 8),
+                           col.names=c('account', 'division', 'store', 'balance', 'duedate'))
+
+head(contas_receber)
+```
+
+</br>
+
+### 3.2.5 Arquivos `.RData` e `.R`
+
+Dados existentes no R podem ser salvos no formato `.RData`. O conteúdo destes arquivos podem ser obtidos com a função `load()`. 
+
+```{r}
+setwd(diretorio)
+load('sigrh.RData')
+dim(sigrh)
+```
+
+Para salvar qualquer objeto (vetor, lista, data frame, matriz, array, função, etc.) existente na área de trabalho, utiliza-se a função `save()`. Exemplo:
+
+```{r}
+save(contas_receber, file='contas_receber.RData')
+```
+
+Os comandos existentes em um arquivo de *script* do R (`.R`) podem ser executados ao se carregar o arquivo no R. Isto pode ser feito com a função `source()`. Exemplo:
+
+```{r}
+setwd(diretorio)
+source('hello_world.R')
+```
+
+</br>
+
+### 3.2.6 Arquivos de pacotes estatísticos
+
+O R possui o pacote `foreign` que possui funções que permitem importar arquivos de dados de alguns pacotes estatísticos, como `Stata`, `epiinfo`, `SPSS` e `SYSTAT`.
+
+Os exemplos a seguir ilustram como importar arquivos do Stata (`.dta`) e do SPSS (`.sav`).
+
+```{r}
+library(foreign)
+setwd(diretorio)
+
+## Stata
+stata_file <- read.dta('regsim.dta')
+str(stata_file)
+
+## SPSS
+spss_file <- read.spss('p004.sav', to.data.frame = TRUE)
+str(spss_file)
+```
+
+</br>
+
+Arquivos `.dbf` também podem ser importados pelo R. Exemplo:
+
+```{r}
+setwd(diretorio)
+obito <- read.dbf("DOPRJ2014.dbf", as.is = TRUE)
+head(obito)[,1:4]
+```
+
+O arquivo acima refere-se às declarações de óbitos emitidas no Estado do Rio de Janeiro, apuração preliminar, para o ano de 2014 baixado o site do [DATASUS](http://www2.datasus.gov.br/DATASUS/index.php?area=0901&item=1). 
+
+Para a importação de arquivos `.dbf` compactados (`.dbc`) pode-se utilizar o pacote `read.dbc` que dispõe da função `read.dbc()` para a importação deste tipo de arquivo, muito utilizado pelo DATASUS. 
+
+</br>
+
+### 3.2.7 Importação de dados de Sistemas Gerenciadores de Bancos de Dados - SGBDs
+
+Muitas vezes os dados necessários à análise estão armazenados em bancos de dados. Existem diversos desses aplicativos no mercado sendo bastante conhecidos o `SQLServer`, `ORACLE`, `MySQL`, `PostgreSQL`, `Access`, `SQLite`, etc.
+
+O R dispõe de um conjunto de pacotes que possibilitam o acesso aos dados armazenados nestes aplicativos. Nestas notas será visto como acessar dados contidos em arquivo do aplicativo `Access`.
+
+Para a recuperação de dados contidos em arquivos do `Access`, será utilizado o pacote `RODBC`, que permite a realização de conexões via ODBC com diversos bancos de dados.
+
+```{r}
+library(RODBC)
+odbcDataSources() # consulta os drives instalados
+
+setwd(diretorio)
+conn <- odbcDriverConnect(paste("DRIVER=Driver do Microsoft Access (*.mdb)",
+                                "DBQ=C:\\Users\\Marcos\\Dropbox\\1. Cursos ECG\\Intro-R Treinamento TCE-MT\\3.dados\\Microdados_Set15.mdb", sep=';'))
+
+sqlTables(conn) # lista as tabelas existentes na base...
+
+sqlColumns(conn, "Microdados_Set15")[, c('COLUMN_NAME', 'TYPE_NAME')] # identifica as colunas... 
+
+## Extrair todos os dados existentes na tabela Microdados_Set15
+dados_mdb <- sqlFetch(conn, "Microdados_Set15")
+dim(dados_mdb)
+head(dados_mdb)
+
+## Realizar uma consulta SQL...
+consulta <- "select * 
+             from Microdados_Set15
+             where aisp = '18' and regiao = 'CAP'"
+
+dados_mdb <- sqlQuery(conn, consulta, max=30) # submete a query e retorna 30 linhas...
+dim(dados_mdb)
+
+## Echar a conexão com a base de dados.
+odbcClose(conn)
+```
+
+</br>
+
+Com o pacote `sqldf` é possível recuperar dados de arquivos `.csv` utilizando consultas SQL como se o arquivo fosse uma tabela de um banco de dados.
+
+```{r}
+library(sqldf)
+setwd(diretorio)
+conexao <- file('ESCOLAS.CSV')
+escolas_estaduais <- sqldf('select * from conexao', file.format = list(sep='|'))
+dim(escolas_estaduais)
+head(escolas_estaduais)[,1:4]
+```
+
+</br>
+
+## 4. EXERCÍCIOS
+
+1. Importe o conjunto de dados `Address.ASC`. Quantos registros tem este conjunto de dados? 
+
+**Nota:** O dicionário de dados está no arquivo `Descricao Arquivos Dados_v2.doc`.
+
+</br>
+
+2. Tente realizar a importação do conjunto de dados `Employees.txt`. O arquivo foi importado corretamente? Caso não tenha sido, você sabe dizer qual a razão?
+
+</br>
+
+3. Realize a importação do conjunto de dados `balanco.csv` utilizando o mecanismo de importar da área de transferência. 
+
+</br>
+
+4. Relize a importação do conjunto de dados `despesas_candidatos_2014_RJ.txt`. Quantos registros e quantas variáveis tem este conjunto de dados?  
+
+</br>
+
+5. Importe o conjunto de dados `tui.RData`. Quais as variáveis existentes neste conjunto de dados?
+
+</br>
+
+6. Importe o conjunto de dados contido no arquivo `carsdata.dta` e `Child Aggression.sav`. Quantas observações tem cada um dos arquivos?
+
+</br>
+
+7. Importe do conjunto de dados existente no seguinte endereço:  
+
+`http://dominios.governoeletronico.gov.br/dados-abertos/Dominios_GovBR_basico.csv`  
+
+Quantos registros tem este conjunto de dados? Quantas variáveis?
+
+</br>
+
+8. Utilizando o pacote `sqldf` importe os 50 primeiros registros do conjunto de dados `Microdados 2013 - 2015.csv` contido no arquivo `Microdados 2013 - 2015.zip`.
+
+
+# CAPÍTULO 4 - MANIPULAÇÃO DE DADOS
+
+Neste capítulo serão vistos alguns recursos disponíveis no R para a manipulação de bases de dados.  
+
+</br>
+
+## 4.1 - STRINGS E DATAS
+
+### 4.1.1 Datas e horas
+
+Datas e horas são tipos de dados frequentemente encontrados na prática e o R dispõe de algumas funções para lidar com eles.
+
+Para lidar com datas, a principal função é `as.Date()` que possibilita a conversão de strings representando datas em um objeto da classe `Date`. Esta função recebe como argumento um vetor de caracteres que representem data (argumento `x`) e uma indicação de como as datas estão representadas pelos caracteres (argumento `format=`).
+
+Por exemplo, as *strings* "02102016", "02-10-2016", "02/10/2016", "02.10.2016", "02OUT2016" representam, todas, a mesma data: "dois de outubro de 2016". 
+
+Os exemplos a seguir ilustram a utilização desta função:  
+
+```{r}
+# Criação de um vetor de strings representando datas
+data1 <- c("2014-11-18", "2007-12-14", "2015-06-01")
+class(data1)
+
+# Conversão do vetor de 'strings' para um vetor de datas
+data1 <- as.Date(data1)
+data1
+class(data1)
+```
+
+Quando a data está representada no formato "YYYY-MM-DD" não é necessário passar à função um valor para o argumento `format=`. Os exemplos a seguir ilustram a conversão de caracteres em data para outras representações.
+
+```{r}
+## Criação de vetor de strings representando datas. Outro formato.
+data2 <- c("28/01/1972", "14/12/1942", "17/08/2014")
+as.Date(data2, format="%d/%m/%Y")
+
+data3 <- c("180504", "291214", "260875")
+as.Date(data3, format="%d%m%y")
+
+data4 <- c("12 agosto 2013", "17 fevereiro 2011", "18 julho 2013")
+as.Date(data4, "%d %B %Y")
+```
+
+Como pode ser visto, em alguns casos a conversão de *string* para datas exigiu que se fornecesse como argumento para a função um código de formatação indicando como as datas estão  representadas.
+
+O quadro a seguir fornece alguns destes códigos de formatação. Para maiores detalhes consultar o help da função `strptime()` 
+
+Código | Descrição  
+------ | -----------------------------------------------------------------------  
+\%d     | Dia (decimal)  
+\%m     | Mês (decimal)  
+\%b     | Mês (abreviação)  
+\%B     | Mês (nome completo)  
+\%y     | Ano (dois dígitos)  
+\%Y     | Ano (quatro dígitos)  
+
+Uma vez que se diponha de um objeto que represente data, funções específicas para trabalhar com datas podem ser utilizadas, como por exemplo `weekdays()`, `quarters()`, `months()`.
+
+```{r}
+# Converter o vetor de caracteres 'data4' criado anteriormente para
+# para um vetor de datas.
+dias <- as.Date(data4, "%d %B %Y")
+dias
+
+# Obter os dias da semana
+weekdays(dias)
+weekdays(dias, abbrev=TRUE)
+
+# Trimestres
+quarters(dias)
+
+## Meses
+months(dias, abbreviate = TRUE)
+```
+
+Sequências de datas podem ser geradas com a função `seq()`:
+
+```{r}
+## Gerar um vetor de datas de 01/11/2014 a 09/11/2014 
+seq_data <- seq(as.Date("2014-11-01"), as.Date("2014-11-09"), "days")
+seq_data
+
+## Identifica os finais de semana.
+weekdays(seq_data, abbrev=TRUE) %in% c("sáb", "dom")
+```
+
+A quantidade de dias entre duas datas pode ser calculada com a função `difftime()` da seguinte forma:
+
+```{r}
+x2 <- difftime(as.Date("2014-11-09"), as.Date("2014-11-01") , units="days")
+x2
+
+x2 <- as.numeric(x2)
+class(x2)
+
+x2
+```
+
+Outras funções de interesse são: `strptime()` e `strftime()`.
+
+A função `strptime` é utilizada para converter strings representando data para objetos da classe `POSIXlt` e  `POSIXt`.
+
+```{r}
+datas <- c("28/01/1972", "14/12/1942", "17/08/2014")
+datas_posix <- strptime(datas, "%d/%m/%Y") 
+datas_posix
+
+class(datas_posix)
+
+data_hora <- c('2002-06-09 12:45:40',
+               '2003-02-23 09:30:40',
+               '2002-09-04 16:45:40',
+               '2002-11-13 20:00:40',
+               '2002-07-07 17:30:40')
+
+data_hora <- strptime(data_hora, "%Y-%m-%d %H:%M:%S")
+data_hora
+
+## Obtem data e hora atual
+Sys.time()
+
+```
+
+A função `strftime()` é utilizada para formatar a apresentação de datas. Exemplo:
+
+```{r}
+strftime(datas_posix, '%Y') ## ano (4 dígitos)
+strftime(datas_posix, '%w') ## dia da semana- 0 = domingo
+strftime(datas_posix, '%a') ## dia da semana abreviado
+```
+
+A função `format()` também pode ser utilizada para apresentar datas em formatos definidos pelo usuário, da mesma forma que a função `strftime()`.
+
+```{r}
+format(datas_posix, '%a')
+```
+
+É muito comum recebermos dados onde as datas estejam expressas em inglês. Quando isso ocorre, a conversão dos dados para o formato de data necessita de cuidado adicional que consiste em alterar a configuração do R para que ele entenda corretamente os meses. O exemplo a seguir ilustra esta situação:
+
+```{r}
+data_ingles <- c('09-Apr-14', '15-Apr-14', '14-May-14', '14-May-14',
+                 '15-Apr-14', '10-Apr-14', '29-Oct-14', '29-Oct-14',
+                 '30-Oct-14', '17-Dec-14', '17-Dec-14', '18-Dec-14')
+
+## Tentativa 1 - erro... (desconsidera o fato de estar em inglês...)
+as.Date(data_ingles, '%d-%b-%y')
+
+## Tentativa 2 - altera a configuração...
+#  Captura e guarda a configuração original...
+minha_configuracao <-  Sys.getlocale("LC_TIME")
+minha_configuracao
+
+# altera a configuração...
+Sys.setlocale("LC_TIME", "C") 
+
+# realiza a conversão... o mesmo feito anteriormente...
+as.Date(data_ingles, '%d-%b-%y') 
+
+# volta para a cofiguração original...
+Sys.setlocale("LC_TIME", minha_configuracao) 
+```
+
+O pacote `lubridate` fornece várias funções para lidar com datas.
+Mais informações: `?DateTimeClasses`
+
+</br>
+
+### 4.1.2 Manipulação de Strings
+
+Existem diversas funções que operam sobre *strings* de caracteres. As funções `tolower()` e `toupper()` são utilizadas para converter letras para caixa baixa e caixa alta respectivamente.
+
+```{r}
+toupper('curso de r')
+tolower('CURSO DE R')
+```
+
+Uma função muito utilizada na prática é função `paste()`, que concatena as *strings* fornecidas como argumento.  
+
+```{r}
+paste("A", 1:10, sep="|")
+paste("A", 1:10, sep="", collapse="-")
+```
+
+A função `nchar()` retorna o número de caracteres em uma *string*. Exemplo:
+
+```{r}
+nchar(c("Marcos", "João", "Paulo")) 
+```
+
+A função `strsplit()` realiza a separação de strings de acordo com algum padrão fornecido à função. Exemplos:
+
+```{r}
+strsplit(c("Marcos", "Marcio", "Sandra"), '')
+aa <- strsplit(c("28/01/1972", "14/12/1942", "17/08/2014"), "/") 
+aa
+```
+
+Para extrair partes de uma *string*, utiliza-se a função `substr()`.
+
+```{r}
+substr("calculo", 1, 3) # retorna um subconjunto de uma string
+substr("calculo", 3, 5)
+```
+
+A função `strtrim()` também pode ser utilizada para extrair partes de uma string. Exemplo:
+
+```{r}
+strtrim(c("Marcos", "Marcio", "Sandra"), 3)
+strtrim(rev(c("Marcos", "Marcio", "Sandra")), 5)
+strtrim(c("Marcos", "Marcio", "Sandra"), c(1,5,10))
+```
+
+A função `trimws()` remove espaços em branco antes, depois ou de ambos os lados de uma palavra. Exemplo:
+
+```{r}
+trimws(c('   Marcos', '   Marcio   ', 'Sandra   '))
+```
+
+</br>
+
+## 4.2 - BÁSICO DE EXPRESSÕES REGULARES
+
+Uma expressão regular é um padrão que descreve um conjunto de caracteres. Por exemplo, o padrão `sor` vai 'casar' com as seguintes *strings*: `sorriso`, `opressor`, `soro`, `sorte` e `resorte` já que todas contém a string `sor`, mas não casa com as *strings* `solar`, `senhor`, embora ambas contenham as strings `s`, `o` e `r`.
+
+A principal função do R para fazer buscas utilizando expressões regulares é a função `grep()`. O exemplo a seguir ilustra sua utilização:
+
+```{r}
+# Define um vetor de caracteres
+palavras <- c('sorriso', 'opressor', 'soro', 'sorte', 'solar','senhor', 'resorte')
+
+# Retorna as strings no vetor 'palavras' que casam com a string 'sor' 
+grep('sor', palavras, value=TRUE)
+```
+
+Na composição de expressões regulares existem caracteres especiais que permitem uma grande generalização na busca por 'casamento' de *strings*. Por exemplo, supondo que se deseje obter as palavras que terminem com a *string* `or` e as que iniciem com a *string* `o` podemos utilizar, respectivamente, os caracteres especiais `$` e `^` conforme mostrado a seguir:
+
+```{r}
+# Palavras que terminem com 'or'
+grep('or$', palavras, value=TRUE)
+
+# Palavras que iniciem com 'o'
+grep('^o', palavras, value=TRUE)
+```
+
+No quadro a seguir apresenta-se uma relação destes caracteres especiais, também conhecidos por  metacaracteres:
+
+Caractere | Descrição  
+----------|---------------------------------------------------------------------  
+\^        | casa caracteres no início da *string*  
+\$        | casa caracteres no fim da *string*  
+\.        | casa qualquer caractere  
+\|        | separa padrões alternativos  
+\(\)      | define um grupo   
+\[\]      | define uma lista   
+\*        | casa 0 ou mais ocorrências do caractere precedente  
+\?        | indica a ocorrência ou não do caractere precedente 
+\+        | uma ou mais ocorrências do caractere precedente
+\{n\}     | casa `n` ocorrências do caractere precedente   
+\{n,\}    | casa no mínimo `n` ocorrências do caractere precedente
+\{n,m\}   | casa de `n` até `m` ocorrências do caractere precedente
+\\d \\D   | casa dígito e casa não dígitos
+\\s \\S   | casa espaço e casa não espaço
+\\w \\W   | casa palavras e casa não palavras
+\\b       | casa o caractere branco no início ou fim de uma *string*  
+
+A construção de `classes de caracteres` pode ser feita colocando-se um conjunto de caracteres entre colchetes (lista). Por exemplo, a expressão regular "Jos[ée]" irá casar tanto com a *string* "José" como "Jose". 
+
+Uma lista negada pode ser construída colocando-se o caractere "^" como primeiro elemento de uma `classe de caracteres`, fazendo com que a expressão regular case qualquer coisa menos a *string* dentro dos colchetes. 
+
+A combinação destes caracteres especiais permitem o casamento de padrões de *string* bem complexos.
+
+Assim como a função `grep()`, outras funções do R tem por argumento expressões regulares, como por exemplo, as funções `grepl()`, `strsplit()`, `list.files()`, `sub()`, `gsub()`,  `regexpr()`, `gregexpr()`, `regexec()` e `apropos()`.
+
+As funções `sub()` e `gsub()` são utilizadas para realizar a substituição de *strings*. Estas funções recebem como argumento uma expressão regular que represente a *string* a ser substituída e a *string* a ser utilizada para realizar a substituição. A difernça entre as duas funções reside no fato de que `sub()` realizará a substituição apenas na primeira ocorrência de casamento da expresssão regular com as *strings* fornecidas, enquanto `gsub()`realizará a substituição em todas as ocorrências de casamentos da expressão regular com as *strings* fornecidas.   
+
+No exemplo a seguir o objetivo é realizar a substituição de toda a *string* contida em cada elemento do vetor `txt` por uma que indique o número do processo:
+
+```{r}
+# Criação de um vetor de strings
+txt <- c(
+"A licitação constitui o processo TCE-RJ 104.308-4/12 que foi cadastrado no dia 02/08/2014.",
+"O processo 203.475-8/14 refere-se a uma inexigibilidade de licitação",
+"A denúncia foi formalizada no processo 108703-2/09",
+"103428-5/15",
+"Deu entrada o processo TCE-RJ no 1034268/12")
+
+txt
+
+sub(".*(\\d{3}\\.?\\d{3}-?\\d/\\d{2}).*", "\\1", txt)
+```
+
+A expressão regular fornecida à função `sub()` casa com todas as *strings* existentes no vetor `txt`. Utilizamos um retrovisor ( "\\1" ) que indica que se deve utilizar o trecho da expressão regular entre parênteses, no caso `\\d{3}\\.?\\d{3}-?\\d/\\d{2}` que casa com os números de processos, para substituir a *string* casada. Assim, o que se fez foi substituir toda a *string* por um trecho dela que representa o número de processo. 
+
+Outros exemplos de uso de expressões regulares:
+
+```{r}
+vetor <- c("Abril", "Agosto", "Julho", "Maio", "abril")
+vetor
+
+grep("^A", vetor, ignore.case=TRUE)
+grep("^A", vetor, ignore.case=TRUE, value=TRUE)
+
+grep("il$", vetor, ignore.case=TRUE, value=TRUE)
+
+txt <- c("O meu cpf é 012.486/00 e só", "o cpf dele é 048-762/01 e ele não sabe", "o cpf da galera é 052796/01")
+
+sub(".*(\\d{3}[\\.-]?\\d{3}/\\d{2}).*", "\\1", txt)
+
+```
+
+A função `grepl()` retorna `TRUE` ou `FALSE` caso tenha havido ou não casamento da expressão regular fornecida à função com as *strings* passadas à função. Isso faz com que esta função seja muito conveniente para a uitlização em filtros.  
+
+Para mais informações `?regex`
+
+</br>
+
+## 4.3 - MANIPULAÇÃO DE DADOS
+
+Nos exemplos que se seguem serão utilizados diversos conjuntos de dados.  O primeiro a ser utilizado é o conjunto de dados `RH.csv` que contém informações relativas aos funcionários de uma empresa. 
+
+A importação da base de dados é feita da seguinte forma:
+
+```{r}
+diretorio <- "C:\\Users\\Marcos\\Dropbox\\1. Cursos ECG\\Intro-R Treinamento TCE-MT\\3.dados"
+setwd(diretorio)
+
+rh <- read.csv2("RH.csv", as.is=TRUE)
+```
+
+```{r, echo=FALSE}
+## Limpeza das variáveis
+rh <- transform(rh, Sexo = ifelse(Sexo == "Femi ", "Feminino",
+                           ifelse(Sexo == "Masc ", "Masculino",
+                           ifelse(Sexo == " ", NA, Sexo))))
+
+rh <- transform(rh,
+      Estado.Civil = ifelse(Estado.Civil == "Casa ", "Casado",
+                     ifelse(Estado.Civil == "Viúv ", "Viúvo",
+                     ifelse(Estado.Civil == "Solt ", "Solteiro",
+                     ifelse(Estado.Civil == "Divo ", "Divorciado",
+                     ifelse(Estado.Civil %in% c("  ", " "), NA, Estado.Civil))))))
+
+rh <- transform(rh, Unidade = ifelse(Unidade == "Curi ", "Curitiba",
+                              ifelse(Unidade == "Flor ", "Florianópolis",
+                              ifelse(Unidade == "Rio  ", "Rio de Janeiro",
+                              ifelse(Unidade == "São  ", "São Paulo",
+                              ifelse(Unidade == " ", NA, Unidade))))))
+
+rh <- transform(rh, Departamento = ifelse(Departamento == "Vend ", "Vendas",
+                                   ifelse(Departamento == "Prod ", "Produção",
+                                   ifelse(Departamento == "Pess ", "Pessoal",
+                                   ifelse(Departamento == "Fina ", "Financeiro",
+                                   ifelse(Departamento == " ", NA, Departamento))))))
+
+rh <- transform(rh, Cargo = ifelse(Cargo == "Assi ", "Assistente",
+                            ifelse(Cargo == "Gere ", "Gerente",
+                            ifelse(Cargo == "Auxi ", "Auxiliar",
+                            ifelse(Cargo == " ", NA, Cargo)))))
+
+```
+
+É boa prática sempre conferir se a importação dos dados se deu corretamente.
+Checagens possíveis são:
+
+```{r}
+head(rh, 2)
+str(rh)
+```
+
+Aparentemente, não houve qualque problema com a importação dos dados. Inicia-se, a seguir a apresentação de como implementar algumas técnicas de análise de dados no R.
+
+</br>`
+
+### 4.3.1 Inclusão e exclusão de variáveis 
+
+O cálculo de novos campos em um `data frame` a partir de campos já existentes no conjunto de dados pode ser feito utilizando-se as funções `transform()` ou `within()` ou ainda utilizando-se o operador `$`.
+
+No exemplo a seguir duas novas variáveis serão incluídas no data frame `rh`.
+
+```{r}
+rh <- transform(rh, SalTot = Salário + Bônus,
+                    SalLiq = 0.95 * Salário)
+```
+
+Com a função `within()`, a criação de uma nova variável dá-se da seguinte forma:
+
+```{r}
+rh <- within(rh, Desconto <- Salário * (1 - 0.08))
+
+```
+
+Utilizando-se o operador `$`:
+
+```{r}
+rh$NovaColuna <- rh$SalTot + 1000 
+head(rh, 2)
+```
+
+A função `with()` permite acessar diretamente as colunas (variáveis) de um `data frame` e realizar operações com elas. Exemplo: 
+
+```{r}
+with(rh, summary(Salário))
+```
+
+A eliminação de variáveis pode ser feita utilizando-se `NULL`. A eliminação da variável `SalLiq` pode ser feita da seguinte forma:
+
+```{r}
+rh$SalLiq <- NULL
+head(rh, 2)
+```
+
+Outras formas de se excluir variáveis são:
+
+```{r}
+## Selecionar apenas as variáveis de interesse
+head(rh[, c("Anos.de.estudo", "Unidade")], 2)
+
+## Descartar as variáveis indesejadas
+head(rh[, -c(1, 5)], 2)
+```
+
+</br>
+
+### 4.3.2 Recodificação de variáveis
+
+Às vezes é necessário corrigir os valores de variáveis em uma base de dados. No exemplo a seguir, a variável `Formação` será recodificada de forma que as inconsistências existentes sejam corrigidas.  
+
+```{r}
+unique(rh$Formação)
+```
+
+Para corrigir as inconsistências identificadas, pode-se proceder da seguinte forma:
+
+```{r}
+rh$Formação[rh$Formação %in% c("Biológicas", "Biol ")] <- "BIO"
+rh$Formação[rh$Formação %in% c("Exatas", "Exat ")] <- "EXA"
+rh$Formação[rh$Formação %in% c("Humanas", "Huma ")] <- "HUM"
+rh$Formação[rh$Formação %in% c("Sócio-econômicas", "Sóci ")] <- "SEC"
+rh$Formação[rh$Formação == " "] <- NA
+
+unique(rh$Formação)
+```
+
+</br>
+
+### 4.3.3 Categorização de variáveis
+
+É muito frequente a situação em que se deseja categorizar uma variável numérica. No R, isso pode ser feito com a função `cut()`. A variável `Salário` será categorizada em 4 classes de acordo com a faixa salarial, conforme mostrado a seguir:
+
+* Junior: `]0, 6.17]`
+* Pleno: `]6.17, 15]`
+* Senior: `]15, Inf[`
+
+```{r}
+summary(rh$Salário)
+
+rh <- transform(rh,
+                ClasseSalarial = cut(Salário,
+                                     breaks=c(0, 6.17, 15, Inf),
+                                     labels=c("Junior", "Pleno", "Senior")))
+
+head(rh, 2)
+```
+
+</br>
+
+### 4.3.4 Filtro
+
+Uma operação que se realiza com bastente frequência em um conjunto de dados é a aplicação de filtros; que consiste em selecionar os registros do conjunto de dados que atendam a um determinado critério.
+
+No exemplo a seguir, será aplicado um filtro à base de dados com o objetivo de selecionar apenas os registros para os quais a variável `Anos.de.estudo` é maior ou igual a 17 e `Sexo` é igual a masculino.
+
+```{r}
+unique(rh$Sexo)
+escolaridade <- subset(rh, Anos.de.estudo >= 17 & Sexo == "Masculino")
+head(escolaridade)
+```
+
+</br>
+
+### 4.3.5 Ordenação
+
+A ordenação de um conjunto pode ser feita utilizando-se a função `order()`. A seguir será feita a ordenação do conjunto de dados em ordem crescente de `Salário`.
+
+```{r}
+idx <- order(rh$Salário,  decreasing=TRUE)
+rh <- rh[idx, ]
+head(rh)
+```
+
+</br>
+
+### 4.3.6 *Merging* 
+
+Para reunir em uma única base de dados campos de duas ou mais bases de dados, pode-se utilizar a função `merge()`. Com vistas a facilitar o entendimento de como a função opera, será utilizado um conjunto de dados bem pequeno, que será definido a seguir: 
+
+```{r}
+Pdiv <- data.frame(Time=c("Flamengo", "Vasco", "Fluminense"),
+                   Torcida=c(100, 50, 60))
+
+Sdiv <- data.frame(Time=c("Vasco", "Fluminense", "Bangu"),
+                   QtdTit = c(22, 33, 40))
+
+Tdiv <- data.frame(Time = c("Vasco", "Bangu", "Olaria"),
+                   Derrotas = c(30, 15, 14))
+
+```
+
+```{r}
+Pdiv
+Sdiv
+Tdiv
+
+merge(Pdiv, Sdiv, by="Time")                
+merge(Pdiv, Sdiv, by="Time", all.x=TRUE)       
+merge(Pdiv, Sdiv, by="Time", all.y=TRUE)    
+merge(Pdiv, Sdiv, by="Time", all=TRUE)      
+```
+
+Feita esta pequena ilustração do funcionamento da função `merge()`, será feita a seguir sua aplicação utilizando-se os conjuntos de dados `Arfile.ASC` e `Address.ASC`.
+
+Estes dois conjuntos de dados são arquivos texto de formato fixo e, dessa forma, sua importação depende de conhecermos o *layout* dos arquivos, o que consta do documento `Descricao Arquivos Dados_v2.doc` que acompanha os conjuntos de dados utilizados neste curso.
+
+Com base nas informações contidas naquele documento, a importação dos dados pode ser feita da seguinte forma:
+
+```{r}
+setwd(diretorio)
+
+contas_receber <- read.fwf('Arfile.ASC',
+                           widths = c(11, 4, 4, 15, 8),
+                           col.names = c('account', 'division', 'store', 'balance', 'duedate'),                            strip.white = TRUE)
+
+endereco <- read.fwf('Address.ASC',
+                     widths = c(11, 33, 33, 30, 25, 5),
+                     col.names = c('account', 'name1', 'name2', 'street', 'cityst', 'zip'),
+                     comment.char='',
+                     strip.white = TRUE)
+
+```
+
+A operação de *merging* depende de que as bases de dados a serem reunidas tenham ao menos um campo em comum.
+
+Nas duas bases de dados importadas, o campo `account`, que identifica cada cliente, é comum às duas bases de dados e pode ser utilizada como `chave` para a execução desta operação.
+
+```{r}
+nova_base <- merge(contas_receber, endereco)
+head(nova_base, 3)
+```
+
+</br>
+
+### 4.3.7 Cruzamento de dados
+
+O que é normalmente denominado de `cruzamento de dados` consiste em identificar quais valores de uma variável constam de uma outra variável uma outra base de dados.
+
+Retomando o exemplo dos times de futebol, uma questão de interesse poderia ser: quais times da 1a divisão também estão na 2a?. Isto pode ser feito da seguinte forma:
+
+```{r}
+Pdiv <- transform(Pdiv, EstaNa2aDiv = ifelse(Time %in% Sdiv$Time, 1, 0))
+Pdiv
+```
+
+No exemplo a seguir utilizaremos os conjuntos de dados `contratos.csv` e `receitas_candidatos_2014_RJ.txt` com o objetivo de verificar se, dentre as empresas contratadas por orgãos estaduais, alguma figura como doadora de campanha.
+
+```{r}
+setwd(diretorio)
+
+## Importa a a base de contratos
+contratos <- read.csv2('contratos.csv', as.is=TRUE)
+names(contratos) <- gsub('\\.', '', names(contratos))
+contratos$Contratado <- gsub('[[:punct:]]', '', contratos$Contratado)
+
+## Importa a base de doadores de campanha
+doadores <- read.csv2('receitas_candidatos_2014_RJ.txt', as.is=TRUE, na.strings = '#NULO')
+names(doadores) <- gsub('\\.', '', names(doadores))
+
+## Cruzamento dos dados - marcar os contratos onde os fornecedores são doadores de campanha
+contratos <- transform(contratos,
+                       EhDoador = ifelse(Contratado %in% doadores$CPFCNPJdodoador, 1, 0))
+
+contratos_com_doadores_campanha <- subset(contratos, EhDoador == 1)
+
+## Obter a lista de contratados doadores de campanha
+lista_doadores <- subset(contratos_com_doadores_campanha,
+                         !duplicated(Contratado),
+                         select=c('Contratado', 'DescriçãoContratado'))
+
+nrow(lista_doadores)
+```
+
+</br>
+
+### 4.3.8 *Reshaping* 
+
+As vezes os conjuntos de dados que se tem à mão precisam ter sua estrutura modificada para seja possível realizar a análise de interesse ou para se passar o conjunto de dados como argumento de uma função.
+
+Especificamente considera-se o caso de passar os dados do `formato longo` para o `formato amplo` e vice-versa. 
+
+Para mais informações sobre a organização de dados, sugere-se a leitura do artigo `**Tidy Data**` do Hadley Wickham que consta do material de leitura disponibilizado no Moodle. Este artigo também pode ser baixado [aqui](http://www.jstatsoft.org/v59/i10/paper). 
+
+No R, a função básica para realizar esta tarefa é a função `reshape()`. Porém o uso desta função é um pouco complicado, visto que envolve a especificação de diversos argumentos de forma não muito intuitiva.
+
+Assim, será utilizado o pacote `reshape2` que facilita bastante a realização do procedimento de *reshaping*. Este pacote disponibiliza as funções `melt()` e `dcast()` que possibilitam, respectivamente, a conversão do formato amplo para o longo, e do longo para o amplo. 
+
+O exemplo a seguir ilustra como passar um conjundo de dados do formato amplo para longo. Será utilizado o conjunto de dados `IDH1991_2000.csv`:
+
+```{r}
+library(reshape2)
+setwd(diretorio)
+idh <- read.csv2('IDH1991_2000.csv', as.is = TRUE)
+head(idh, 2)
+idh2 <- melt(idh, id.vars=c('Cod', 'Mun'), variable.name='IDH', value.name = 'VlrIDH')
+head(idh2, 10)
+```
+
+O exemplo a seguir fará o oposto. O conjunto de dados está no formato longo e será modificado para o formato amplo. Será utilizado o conjunto de dados `Receita_Municipios_RJ_2013.txt`
+
+Como visto, a função `dcast()` permite a realização desta tarefa. Exemplo:
+
+```{r}
+setwd(diretorio)
+receita <- read.table('Receita_Municipios_RJ_2013.txt', header=TRUE, sep='\t', as.is = TRUE)
+names(receita) <- c('municipio', 'codigo', 'descricao', 'vlr_arrecadado')
+
+## Transformando os dados...
+receita2 <- dcast(receita, codigo + descricao ~ municipio,
+                  value.var = 'vlr_arrecadado')
+
+receita2[1:10, c(1,3:5)]
+```
+
+Outras funções de interesse são: `stack()` e `unstack()`.
+
+</br>
+
+### 4.3.9 Tabulação cruzada
+
+A tabulação cruzada consiste normalmente em se determinar a distribuição de freqüências com referência a uma, duas ou mais variáveis categóricas. Para executar esta tarefa o R dispõe das funções `table()` e `xtabs()`. Será utilizado o conjunto de dados `rh` para ilustrar o procedimento. 
+
+Caso se queira calcular a quantidade de funcionários em cada categoria da variável `Formação2`:
+```{r}
+with(rh, table(Formação))           
+```
+
+Caso fosse necessário saber a quantidade de funcionários por sexo e estado civil:
+
+```{r}
+with(rh, table(Sexo, Estado.Civil))      
+```
+
+Caso o interesse esteja em somar os valores de uma varíável quantitativa com base nos valoes de uma ou mais variáveis categóricas, pode-se utilizar a função `xtabs()`. 
+
+Por exemplo, suponha que se deseja obter o total dos salários pagos por Unidade e, também, o total dos salários pagos por Unidade e Departamento: 
+
+```{r}
+## Total dos salários pagos por Unidade
+xtabs(Salário ~ Unidade , data=rh)
+
+## Total dos salários pagos por Unidade e Departamento 
+xtabs(Salário ~ Unidade + Departamento , data=rh)
+
+## Total dos salários e Bônus pagos por Unidade
+xtabs(cbind(Salário, Bônus) ~ Unidade, data=rh) 
+
+```
+
+A função `xtabs()` também pode ser utilizada para se obter a distribuição de frequências, da mesma forma como a função `table()`. Exemplo:
+
+```{r}
+xtabs( ~ Estado.Civil, data=rh)
+```
+
+Às vezes pode ser conveniente adicionar à tabela as totalizações de linha e coluna. A função `addmargins()` pode ser utilizada com esta finalidade.
+
+Também pode ser de interesse obter uma tabela com as proporções de observações em cada célula. Isto pode ser feito com a função `prop.table()`.
+
+Fica como tarefa ler a ajuda destas funções para aprender o seu funcionamento.
+
+</br>
+  
+### 4.3.10 Sumarização de dados
+
+A sumarização de dados, ou agregação, consiste em calcular uma medida resumo, usuamente a média ou total, de acordo com os valores de uma variável qualitativa. No exemplo que se segue, utiliza-se o conjunto de dados `rh` para calcular a média de salários, bônus, anos de estudo e tempo de empresa por sexo. 
+
+```{r}
+aggregate(rh[, c("Salário", "Bônus", "Anos.de.estudo", "Tempo.de.empresa")],
+          by=list(Sexo=rh$Sexo),
+          FUN=mean, na.rm=TRUE)
+```
+
+No exemplo acima utilizou-se uma função pré-definida do R (`mean()`) para se realizar a agregação. Mas é possível também utilizar funções definidas pelo usuário. No exemplo a seguir, será definida uma função chamada `estdesc()` que calcula algumas estatísticas descritivas para um vetor numérico. Depois esta função será utilizada para sumarizar a base de dados. 
+
+```{r}
+## Definição da função estatdesc
+estdesc <- function(x, na.rm=TRUE){
+  media  <- mean(x, na.rm=na.rm)
+  maximo <- max(x, na.rm=na.rm)
+  minimo <- min(x, na.rm=na.rm)
+  return(c(Media=media, Max=maximo, Min=minimo))
+}
+
+## Definição das variáveis a serem utilizadas 
+colunas <- names(rh)[c(9, 10)]
+
+## Cálculo da agregação
+ed <-  aggregate(rh[, colunas],
+                 by=list(Sexo=rh$Sexo, ECivil=rh$Estado.Civil),
+                 FUN=estdesc)
+
+ed
+```
+
+</br>
+
+### 4.3.11 Sorteio de amostras aleatórias
+
+Uma operação comum em trabalhos de auditoria é a seleção de amostras. No R esta operação pode ser realizada com a função `sample()`. No exemplo a seguir, será selecionada uma amostra aleatória simples sem reposição de 30 elementos do conjunto de dados `rh`.
+```{r}
+set.seed(1)
+linhas_sorteadas <- sample(row.names(rh), 30)
+amostra <- rh[linhas_sorteadas,]
+dim(amostra)
+
+```
+
+</br>
+
+### 4.3.12 Duplicidades
+
+Às vezes é necessário testar se existe duplicidade em valores de uma variável. Por exemplo, ao se examinar uma relação de empenhos, não se espera encontrar o mesmo número de empenho emitido mais de uma vez.
+
+A identificação de duplicidades será ilustrada com o arquivo `Invoices.csv`. O objetivo é identificar eventuais faturas emitidas em duplicidade. 
+
+```{r}
+setwd(diretorio)
+faturamento <- read.csv2("Invoices.csv")
+
+## Identifica eventuais faturas duplicadass
+repetidos <- faturamento$InvoiceNo[duplicated(faturamento$InvoiceNo)]
+repetidos
+
+subset(faturamento, InvoiceNo %in% repetidos)
+```
+
+</br>
+
+## 4.3.13 Apensar bases de dados
+
+Às vezes pode ser necessário reunir em um único conjunto de dados um ou mais conjuntos de dados. Usualmente o que se deseja é 'colocar uma base de dados embaixo da outra'. Isso pode ser feito no R com a função `rbind()` desde que as bases de dados contenham as mesmas variáveis, nas mesmas posições.
+
+Para ilustrar este procedimento serão utilizados os conjuntos de dados `Trans_Abril.xls` e `Trans_Maio.xls`.
+
+  
+```{r}
+library(readxl)
+setwd(diretorio)
+
+abril <- read_excel('Trans_Abril.xls')
+maio1 <- read_excel('Trans_Maio.xls', sheet='Trans1_Maio')
+maio2 <- read_excel('Trans_Maio.xls', sheet='Trans2_Maio')
+
+```
+
+```{r}
+dim(abril)
+dim(maio1)
+dim(maio2)
+```
+
+```{r}
+head(abril, 2)
+head(maio1, 2)
+head(maio2, 2)
+
+dados <- rbind(abril[, c(1, 4, 3, 5, 6, 2)],    # reordenamento das colunas...
+               maio1,
+               maio2)
+
+## Correção de encoding nos nomes das variáveis
+names(dados) <- iconv(names(dados), from='utf-8', to='latin1')
+head(dados)
+dim(dados)
+```
+
+</br>
+
+### 4.3.14 Família apply
+
+O que usualmente se denomina `família apply` consiste em um conjunto de funções cujos integrantes mais conhecidos são: `apply()`, `tapply()`, `lapply()`, `sapply()` e `mapply()`.
+
+A forma de utilização de cada uma delas será apresentada seguir.
+
+#### 4.3.14.1 apply()
+
+A função `apply()` é utilizada para aplicar uma função às linhas ou colunas de um `data frame` ou `matriz` ou `array`. No exemplo a seguir, calcula-se a média dos salários e bônus dos funcionários. 
+
+```{r}
+media_salarial <- apply(rh[,c("Salário", "Bônus")], 2, mean, na.rm=TRUE)
+media_salarial
+```
+
+É possível substituir as colunas de um data frame por valores modificados. No exemplo a seguir, as colunas `Sexo`, `Estado.Civil` e `Formação` serão substituídas por seus valoes em caixa alta.
+
+```{r}
+rh[,c("Sexo", "Estado.Civil", "Formação")] <- apply(rh[, c("Sexo", "Estado.Civil", "Formação")], 2, toupper)
+
+head(rh)
+```
+
+Estas funções aceitam também funções definidas pelo usuários ou as denominadas `funções anônimas`, que são definidas dentro das funções `apply()`.
+
+#### 4.3.14.2 tapply()
+
+Aplica uma função em um grupo de observações definidas pelos valores de uma variável qualitativa. No exemplo a seguir, será calculada a soma dos anos de estudo por Unidade e depois a soma dos anos de estudo por Sexo e Unidade.
+
+```{r}
+## Soma dos anos de estudo por unidade
+anos_estudo_unidade <- tapply(rh[["Anos.de.estudo"]], list(rh[["Unidade"]]), sum, na.rm=TRUE)
+anos_estudo_unidade
+
+## Soma dos anos de estudo por Sexo e Unidade
+anos_estudo_sexo_unid <- tapply(rh[["Anos.de.estudo"]], list(rh$Sexo, rh$Unidade), sum, na.rm=TRUE)
+anos_estudo_sexo_unid
+```
+
+#### 4.3.14.3  lapply()
+
+Esta função aplica uma função aos elementos de uma `lista` ou `vetor`. O resultado desta função é sempre uma lista. Exemplo:
+
+```{r}
+## Definição de uma lista.
+rr <- list(a=c(1, 5, 9), b=c(10, 15, 25, 48, 72, 29), c=c(12, 12))
+
+## Extrai os elementos da segunda posição em cada componente da lista
+lapply(rr, "[", 2)
+
+## Aplicar a função range() a cada componente da lista e convertendo para data frame
+qq <- as.data.frame(lapply(rr, range))
+qq
+row.names(qq) <- c("Min", "Max")
+qq
+```
+
+#### 4.3.14.4  sapply()
+
+A função `sapply()` é uma versão da função `lapply()` no sentido de que ela tenta retornar um vetor ou matriz, em vez de lista. Seu uso é igual ao da função `lapply()`:
+
+```{r}
+maximo <- sapply(rh[, c("Salário", "Bônus")], max, na.rm=TRUE)    
+maximo
+```
+
+#### 4.3.14.5  mapply()
+
+A função `mapply()` é uma versão multivariada da função `sapply()` e é utilizada quando se deseja aplicar uma função a cada componente de multiplas listas ou vetores.
+
+Dependendo da função a ser utilizada e da quantidade de listas passadas à funçao, este tomará os elementos das listas como argumentos.
+
+Os exemplos a seguir ilustram sua utilização.
+
+```{r}
+mapply(rep, 1:4, 4:1)
+mapply(rep, times = 1:4, MoreArgs = list(x = 42))
+```
+
+Outros membros da família são: `rapply()`, `eapply()` e `vapply()`
+
+</br>
+
+### 4.3.15 Lei de Benford 
+
+O uso da Lei de Benford será ilustrado usando o conjunto de dados `despesas_candidatos_2014_RJ.txt` para examinar as despesas declaradas por um determinado candidato a deputado estadual. Esta técnica é utilizada para verificar a possibilidade de que as despesas informadas não sejam legítimas.
+
+O pacote `benford.analysis` disponibiliza funções que nos permitem realizar esta análise.
+
+Uma vez instalado este pacote, sua utilização é feita da seguinte forma:  
+
+```{r}
+library(benford.analysis)
+setwd(diretorio)
+
+# Importação dos dados
+despesas_campanha <- read.csv2("despesas_candidatos_2014_RJ.txt", as.is = TRUE)
+
+## Filtrar candidados a deputado estadual
+despesas_campanha_deputado <- subset(despesas_campanha,
+                                     Cargo == "Deputado Estadual" &
+                                     Nome.candidato == "SAMUEL LIMA MALAFAIA")
+
+## Análise dos primeiros dígitos
+benf_despesas <- benford(despesas_campanha_deputado$Valor.despesa,
+                         number.of.digits = 1,
+                         discrete = FALSE)
+
+benf_despesas
+
+# Gráfico
+plot(benf_despesas)
+```
+
+</br>
+
+### 4.3.16 Fuzzy matching
+
+Em diversas situações faz-se necessário identificar *strings* que sejam semelhantes entre si; e uma das formas de se executar esta tarefa é com a utilização da técnica de `fuzzy matching`, que consiste na aplicação de algoritmos que conseguem determinar o grau de semelhança entre *strings*.
+
+As funções nativas do R que podem ser utilizadas para esta finalidade são `agrep()` e `adist()`.
+
+O pacote `stringdist` fornece um conjunto adicional de funções para o cálculo da distância entre *strings*. A vantagem de se utilizar este pacote é a possibilidade de escolher o algoritmo de comparação de *strings* a ser utilizado.
+
+No exemplo a seguir, será utilizado o conjunto de dados `Address.ASC` com o objetivo de tentar identificar endereços que, embora sejam o mesmo, tenham sido grafados de formas diferentes. 
+
+```{r}
+library(stringdist)
+setwd(diretorio)
+
+endereco <- read.fwf('Address.ASC',
+                     widths = c(11, 33, 33, 30, 25, 5),
+                     col.names = c('account', 'name1', 'name2', 'street', 'cityst', 'zip'),
+                     comment.char='',
+                     strip.white = TRUE, as.is=TRUE)
+
+## Obtenção do vetor de endereços
+end <- endereco$street
+
+## Exclusão de dígitos
+end <- gsub('(.*?)\\d+(.*?)', '\\1\\2', end)
+
+## Comparação
+end <- unique(end)
+end2 <- expand.grid(end, end, stringsAsFactors = FALSE)
+
+## Calculo da distância
+end2 <- transform(end2, dist = stringdist(end2[,1], end2[,2]))
+
+## Exibir os dez primeiros.
+head(subset(end2, dist != 0 & dist <= 2), 10)
+```
+
+</br>
+
+## 5 - EXERCÍCIOS 
+
+1. Importe o conjunto de dados `RH.csv`. Corrija os problemas existentes nas  variáveis `Sexo` e `Unidade` (mesmo valor escrito de formas distintas). Calcule quantos funcionários existem de cada sexo.
+
+</br>
+
+2. Categorize a variável `Tempo.de.empresa` da seguinte forma:      
+
+* `JUNIOR`: de 0 a 5 anos de empresa  
+* `PLENO`: de 5 a 20 anos de empresa  
+* `SENIOR`: mais de 20 anos de empresa  
+
+Calcule quantos funcionários existem em cada categoria.  
+Calcule quantos funcionários existem em cada categoria por sexo.  
+
+</br>
+
+3. Interrogue o arquivo `despesas_candidatos_2014_RJ.txt` e obtenha as respostas para as seguintes questões:
+
+(a) Quantas observações tem a base de dados?   
+(b) Quais são as variáveis desta base de dados?   
+(c) Quanto cada candidato a deputado estadual gastou?   
+(d) Quanto cada partido gastou?   
+(e) Para cada cargo, quantos candidatos existem na base de dados?   
+(f) Quantos candidatos cada partido teve para cada um dos cargos?   
+(g) Qual o tipo de despesa mais frequente?   
+(h) Com que tipo de despesa houve mais gasto?   
+(i) Em média, quanto foi gasto por cada candidato para cada um dos cargos? Liste apenas os 10 maiores valores médios.   
+(j) Os valores das despesas seguem a lei de benford?       
+(k) Quanto foi gasto em campanha para cada cargo?   
+(l) Quantos partidos existem na base de dados?   
+
+</br>
+
+4. Aplique um filtro ao conjunto de dados `rh` de forma a obter os registros que atendam ao seguinte critério: funcionários do sexo Feminino que trabalhem na Unidade do Rio de Janeiro com tempo de serviço entre 5 e 15 anos inclusive.    
+
+</br>
+
+5. Use a função `lapply()` para calcular a soma dos últimos elementos das componentes da lista definida como:
+
+```{r}
+lista1 <- list(c(15, 29, 36),
+               c(75, 13.75, 19, 76, 127, 48),
+               c(12.2, 23, 79, 107), 
+               c(43))
+```
+
+**Dica:** após obter a lista contendo os últimos elementos dos vetores que compõem a lista, utilize as funções `unlist()` e `sum()`.
+
+</br>
+
+6. Utilizando o conjunto de dados `rh`, sorteie uma amostra aleatória simples de 50 observações sem reposição de forma que 25 observações sejam de funcionários do sexo feminino e 25 do sexo masculino (estratificação por sexo).
+
+Repita este procedimento para sortear uma amostra aleatória simples de forma que ela contenha 10% das observações de cada Unidade.     
+
+</br>
+
+7. Importe o conjunto de dados `despesas_candidatos_2014_RJ.txt` e aplique um filtro de forma que o conjunto de dados resultante contenha apenas candidatos a deputado estadual cuja quantidade de registros na base seja superior ou igual a 500.
+
+</br>
+
+8. Após extraír os arquivos contidos em `specdata.zip`, em um diretório, reúna os arquivos em uma única base de dados. Quantos registros tem a base de dados resultante?
+
+**Dicas:** __(1)__ Utilize a função `list.files()` para obter um vetor com os nomes dos arquivos. __(2)__ Utilize a função `lapply()` para aplicar a função `read.csv()` aos elementos do vetor criado em (1). A conversão da lista resultante em um data frame pode ser feita da seguinte forma: `df <- do.call("rbind", lista)` onde `lista` é a lista resultante da execução da dica (2) e `df` é o nome do data frame que se deseja criar.
+
+</br>
+
+9. O arquivo `cobertura de vacina.csv` foi obtido a partir de tabulação realizada no DATASUS e contém dados de cobertura de vacinação para os municípios do ERJ para os anos de 2010, 2011 e 2012. A partir da coluna `Municípios` crie duas novas colunas contendo o código do município e o nome do município.
+
+</br>
+
+10. Importe o conjunto de dados `Arfile.ASC` e converta a coluna `DUEDATE` para o formato de data.
+
+</br>
+
+11. Para o conjunto de dados importado acima, crie uma nova coluna chamada `TRIM` contendo informação sobre a que trimestre pertence o valor devido.  Calcule o total devido por trimeste. Agora calcule o valor acumulado por trimestre.  
+
+</br>
+
+12. Ainda usando a base dados acima, crie um novo campo denominado `DIAS_ATRASO` contendo a quantidade de dias decorridos entre a data de vencimento (variável `DUEDATE`) e a data de `31/12/2001`, data do encerramento do exercício.  Crie mais uma variável, com o nome `AGE`, contendo a categorização da vaiável `DIAS_ATRASO`  da seguinte forma:  
+
+* "0-30"  - se o valor de `DIAS_ATRASO` for inferior ou igual a 30 dias  
+* "30-60" - se o valor de `DIAS_ATRASO` for superior a 30 dias e inferior a 60 dias  
+* "60-90" - se o valor de `DIAS_ATRASO` for superior a 60 dias e inferior a 90 dias  
+* "> 90" -  se o valor de `DIAS_ATRASO` for superior a 90 dias
+
+Qual o valor devido em cada uma das categorias criadas?  
+
+</br>
+
+13. Importe o conjunto de dados `ucad_cap13_dados_crus.csv` e faça a sua limpeza, que consistirá em remover as strings do tipo `(ID 127)` presentes nos sobrenomes e a string `^` que antecede o nome.
+
+</br>
+
+14. Faça com que o vetor `nomes <- c('jOÂo', 'MarIA', 'caRLoS', 'fErNanDo', 'ClAuDio', 'frAnCIScO', 'RoDRigO')` apresente apenas o primeiro e último caracteres em caixa alta.  
+
+</br>
+
+15. Importe o conjunto de dados `contratos.csv` e aplique um filtro, utilizando apenas o campo `Objeto Resumido` de forma a identificar, caso existam, os contratos relativos a fornecimento de quentinhas. 
+
+</br>
+
+# CAPÍTULO 5 - GRÁFICOS ESTATÍSTICOS
+
+## 5.1 - CONSIDERAÇÕES GERAIS SOBRE A ELABORAÇÃO DE GRÁFICOS  
+
+Gráficos devem ser utilizados com o objetivo de comunicar informação, não devendo ser elaborados de forma a distrair ou enganar o leitor.
+
+Não é boa prática elaborar gráficos com efeito tridimensional que acabam por distorcer a informação que se deseja comunicar.
+
+Durante uma análise exploratória, alguns gráficos são produzidos meramente com o objetivo de explorar os dados. São produzidos diversos gráficos até que se obtenha alguns que de fato se mostrem mais adequados para os dados em análise.
+
+Outras vezes, o objetivo é produzir gráficos que irão compor relatórios, os quais terão um acabamento mais bem elalaborado.
+
+Assim, distingue-se entre gráficos utilizados principalmente para fins exploratórios e gráficos para apresentação.
+
+</br>
+
+## 5.2 - PARÂMETROS GRÁFICOS
+
+Parâmetros gráficos são argumentos que permitem alterar diversos aspectos dos gráficos produzidos com  o sistema básico de gráficos do R, tais como o símbolo usado para marcar pontos em gráficos, o tipo da linha, a cor, o tamanho do gráfico, o tamanho das margens, etc.  
+
+Estes parâmetros podem ser modificados utilizando a função `par()` ou como agumentos das funções que produzem gráficos. Apresentaremos a seguir os principais parâmetros gráficos.  A seguir, apresenta-se um elenco de parâmetros gráficos e uma rápida descrição de sua função.  
+
+</br>  
+
+### 5.2.1 Simbolos e linhas  
+
+Parâmetro | Descrição  
+----------|---------------------------------------------------------------------  
+`pch`     | Especifica o tipo de marcador a ser utilizado para representar pontos nos gráficos  
+`cex`     | Especifica o tamanho do ponto relativamente ao tamanho padrão. 1='default', 1.5='50% maior', 0.5='metade do default', etc.  
+`lty`     | Especifica o tipo de linha a ser desenhada. Assume valores de 1 a 6  
+`lwd`     | Especifica a espessura da linha. Os valores são relativos ao default 1  
+
+Os códigos para os marcadores são apresentados a seguir:
+
+![](figuras/ploting_symbols.png) 
+
+</br>  
+
+### 5.2.2 Cores  
+
+Parâmetro | Descrição  
+----------|---------------------------------------------------------------------  
+`col`     | Especifica as cores a serem utilizadas no gráfico. Aceita valores de cores especificados por indice, hexadecimal, valor rgb e hsv.  
+`col.axis`| Especifica as cores dos eixos  
+`col.lab` | Especifica as cores dos labels dos eixos  
+`col.main` | Especifica as cores para os títulos  
+`col.sub`  | Especifica as cores para os subtítulos  
+`fg`       | Especifica a cor para o foreground do gráfico  
+`bg`       | Especifica a cor para o background do gráfico  
+
+</br>  
+
+### 5.2.3 Elementos textuais  
+
+Parâmetro  | Descrição  
+-----------|--------------------------------------------------------------------  
+`cex`      | Especififca o tamanho do texto.  
+`cex.axis` | Especifica o tamanho do texto dos eixos em relação ao a `cex`  
+`cex.lab`  | Especifica o tamanho do texto dos labels dos eixos em relação ao valor de `cex`  
+`cex.main` | Especifica o tamanho do título em relação ao valor de `cex`  
+`cex.sub`  | Especifica o tamanho do subtítulo em relação ao valor de `cex`  
+`font`     | Especifica a fonte a ser utilizada no texto: 1=normal, 2=negrito, 3=italico, 4=italico negrito, 5=simbolo (em [Adobe encoding symbol](https://www.stat.auckland.ac.nz/~paul/R/CM/AdobeSym.html))   
+`font.axis` | Especifica a fonte para o texto dos eixos  
+`font.lab`  | Especifica a fonte para os rótulos dos eixos  
+`font.main` | Especifica a fonte para os titulos  
+`font.sub`  | Especifica a fonte para os subtitulos  
+`family`    | Especifica a família da fonte utilizada para o texto. Valores padrão são: serif, sans e mono  
+
+</br>  
+
+### 5.2.4 Dimensões do gráfico e das margens
+
+Parâmetro  | Descrição  
+-----------|--------------------------------------------------------------------  
+`pin`      | Especifica as dimensões do gráfico (largura e comprimento) em polegadas  
+`mai`      | Especifica os tamanhos das margens. Os valores são especificados em polegadas em um vetor da forma `c(bottom, left, top, right)` onde o primeiro elemento indica o tamanho da margem inforior, o segundo o tamanho da margem esquerda, o terceiro o tamanho da margem superior e o quarto o tamanho da margem direita  
+`mar`      | Vetor numérico indicando o tamanho das margens em linhas  
+
+</br>
+
+Além desses parâmetros, algumas funções podem ser utilizadas para adicionar elementos ao gráfico. Algumas dessas funções são:
+
+Função       | Descrição  
+-------------|------------------------------------------------------------------  
+`title()`    | Adiciona elementos textuais ao gráfico, como título, labels para os eixos `x`e `y` bem como outros parâmetros gráficos disponíveis em `par()`   
+`axis()`     | Adiciona eixo ao gráfico corrente, permitindo a especificação do lado do gráfico onde se dejesa adicionar o eixo, a posição, dentre outras opções.  
+`text()`     | Permite adicionar elemento textual ao gráfico
+`mtext()`    | Adiciona elemento textual às margens do gráfico 
+`abline()`   | Permite adicionar uma linha ao gráfico   
+`legend()`   | Permite adicionar legenda ao gráfico   
+`plotmath()` |  Permite adicionar anotações matemáticas nos gráficos  
+
+</br>  
+
+## 5.3 - CORES  
+
+Diversas funções podem ser utilizadas para definir as cores a serem utilizadas em gráficos. Pode-se definir paletas de cores específicas ou utilizando paletas pré-definidas. 
+
+As cores podem ser especificadas pelo seu nomes (exemplo `black`) e por valores hexadecimais (exemplo `#FF0000` - vermelho ). Nos subtópicos a seguir serão apresentados estes recursos. 
+
+### 5.3.1 Obtendo os Nomes das Cores
+
+Para acessar os nomes das funções existentes no R, pode-se utilizar a função `colors()`.
+
+```{r}
+## Quantidade de cores definidas no R
+length(colors())
+
+## 10 primeiras cores
+colors()[1:10]
+```
+
+Arquivos contendo os nomes das cores e sua aparência encontram-se no repositório do curso.
+
+</br>
+
+### 5.3.2 Usando Paletas Pré-definidas
+
+Algumas paletas pré-definidas estão disoníveis para uso. A função `palette()` define uma paleta de cores padrão contendo 8 cores: "black", "red", "green3", "blue", "cyan", "magenta", "yellow", "gray".
+
+```{r, echo=FALSE}
+barplot(rep(5, 8), col=palette(), axes=FALSE,
+        main='Paleta de cores padrão - palette()', names.arg=palette(), cex.names = 0.8)
+```
+
+A paleta de cores *default* (mostrada acima) pode ser modificada passando-se como argumento para a função `pallete()` as cores desejadas . Exemplo:
+
+```{r}
+palette(c('red', 'orange', 'blue'))
+palette()
+```
+
+Para retornar à paleta original:
+
+```{r}
+palette('default')
+palette()
+```
+
+A função `palette()`permite que se especifique cores por números representando a localização da cor na paleta. Caso a paleta seja modificada, os números farão referência às posições das novas cores na paleta. Por exemplo:
+
+```{r, fig.align='center', fig.width=5, fig.height=5}
+plot(1:5, pch=16, cex=1.3, col=4)
+```
+
+Como a cor azul é a quarta cor na paleta, ela é utilizada para colorir os pontos. `palette(colors())` permite que se especifique todas as cores por números.
+
+Funções contedo paletas pré-definidas são: `rainbow()`, `gray.colors()`, `terrain.colors()`, `topo.colors()`, `heat.colors()`, `cm.colors()`.
+
+Exemplo da peleta `terrain.colors()` com cinco cores:
+
+```{r,echo=FALSE, fig.align='center', fig.width=5, fig.height=4}
+barplot(rep(5, 5), col=terrain.colors(5), axes=FALSE,
+        main='terrain.colors(5)', names.arg=terrain.colors(5), cex.names = 0.7)
+```
+
+Fica como tarefa de casa verificar as outras paletas.
+
+</br>
+
+### 5.3.3 Definindo Paletas Personalizadas
+
+No tópico anterior foram vistas algumas funções que disponibilizam paletas de cores pré-definidas. Neste tópico será visto como especificar paletas de cores personalizadas.
+
+Duas funções que permitem a definição de paletas de cores são as funções `collorRamp()` e `colorRampPalette()`. Estas funções permitem criar cores intermediárias entre cores definidas pelo usuário. 
+
+A função `collorRamp()` retorna **uma função** cujo argumento será um vetor de valores entre 0 e 1 que serão mapeados para uma matriz de cores especificadas no formato RGB com uma linha por cor e outras 3 ou 4 colunas, especificando as componentes RGB e alpha. 
+
+A função `colorRampPalette()` também retorna **uma função** que aceitará como argumento um valor inteiro indicando a quantidade de cores desejadas e retorna um vetor de caracteres contendo cores interpolando entre as cores definidas.
+
+Exemplo: 
+
+```{r, fig.align='center', fig.width=5, fig.height=4}
+## Criar uma paleta de cores variando do vermelho ao verde passando pelo azul
+
+# Define a função que irá gerar a paleta
+minha_paleta <- colorRampPalette(c("red", "blue", "green")) 
+
+# Cria uma paleta com 7 cores variando do vermelho ao verde
+paleta_vermelho_verde <- minha_paleta(7) 
+paleta_vermelho_verde
+```
+
+O resultado é uma paleta de cores que vai do vermelho ao verde passando pelo azul.
+
+```{r, echo=FALSE, fig.align='center', fig.width=5, fig.height=4}
+barplot(rep(5, 7), col=paleta_vermelho_verde, axes=FALSE,  main='')
+```
+
+Além destas funções, uma opção frequentemente utilizada é a utilização de pacotes que disponibilizem paletas de cores bastante elaboradas.
+
+Um pacote bastante utilizado é o `RColorBrewer`. 
+
+As paletas de cores são construidas de acordo com a seguinte classificação: `sequenciais`, `divergentes` e `qualitativa`.
+
+As paletas **sequenciais** são úteis para destacar dados ordenados que variem de valores baixo para alto. Normalmente escolhe-se as cores mais claras para valores baixos e as cores mais escuras para os altos. 
+
+As paletas **divergentes** colocam igual ênfase valores medianso e mais ênfase nos valores extramos. 
+
+As paletas **qualitativas** não enfatizam os valores representados. São úteis para representar dados nominais ou categóricos.
+
+As paletas existentes no pacote, em cada uma das categorias acima definidas, são listadas a seguir:
+
+**Paletas sequenciais**: `Blues`, `BuGn`, `BuPu`, `GnBu`, `Greens`, `Greys`, `Oranges`, `OrRd`, `PuBu`, `PuBuGn`, `PuRd`, `Purples`,  `RdPu`, `Reds`, `YlGn`, `YlGnBu`, `YlOrBr`, `YlOrRd`
+
+**Paletas divergentes**: `BrBG`, `PiYG`, `PRGn`, `PuOr`, `RdBu`, `RdGy`, `RdYlBu`, `RdYlGn`, `Spectral`
+
+**Paletas qualitativas**: `Accent`, `Dark2`, `Paired`, `Pastel1`, `Pastel2`, `Set1`, `Set2`, `Set3`
+
+Para consultar uma paleta de cores, utiliza-se a função `display.brewer.pal()`, que tem por argumentos a quantidade de cores desejada e o nome da paleta.
+
+```{r, fig.align='center', fig.width=5, fig.height=4}
+library(RColorBrewer)
+display.brewer.pal(7, 'BuGn')
+```
+
+Deve ser notado que cada paleta de cores disponibiliza uma quantidade distinta de cores. 
+Para usar estas paletas de cores nos gráficos faz-se uso da função `brewer.pal()`, que retorna um vetor com as cores escolhidas.
+
+Para visualizar todas as paletas disponibilizadas pelo pacote, utilize a função `display.brewer.all()`. Exemplo:
+
+```{r, fig.align='center', fig.width=5, fig.height=8}
+display.brewer.all()
+```
+
+O pacote `colorspace` fornece uma interface gráfica conveniente para a seleção de cores. É um excelente recurso para simplificar a escolha de cores.
+
+</br>
+
+### 5.3.4 Definindo Vetores de Cores
+
+Existe um conjunto de funções que permitem ao usuário definir cores. Exemplos de tais funções são:
+
+Função      | Descrição  
+------------|------------------------------------------------------------------  
+`hsv()`     | Cria vetores de cores a partir da especificação de Hue (tonalidade), Saturation (Saturação) e Value (Valor) 
+`gray()`    | Cria vetores de cores em tonalidade de cinza  
+`hcl()`     | Cria vetores de cores a partir da especificação de Hue (tonalidade), Chroma (cromaticidade) e Luminance (luminância)  
+`rgb()`     | Cria vetores de cores a partir da especificação das intensidades de Red, Green e Blue 
+`col2rgb()` | Esta função permite a conversão de cores especificadas pelo nome, hexadecimal para o formato RGB.  
+
+Deixamos a cargo do leitor consultar a ajuda das referidas funções e verificar como utilizá-las.
+
+</br>
+
+## 5.4 - GRÁFICOS ESTATÍSTICOS
+
+O R dispõe de 4 sistemas gráficos: `base`, `lattice` , `ggplot2` e `grid`. Neste curso serão abordados apenas os gráficos do sistema básico do R e o pacote `lattice` para gráficos condicionados.
+
+O sistema `base` é o sistema gráfico nativo do R. Serão apresentados a seguir os principais gráficos disponibilizados por este sistema.
+
+Gráficos podem ser uma excelente ferramenta para auxiliar nos trabalhos de auditoria mas, infelizmente, são subutilizados.
+
+</br>
+
+### 5.4.1 Gráfico de linhas
+
+Gráficos de linha são indicados para comunicar a evolução temporal de uma variável. Estes gráficos permitem observar tendências e sazonalidades na evolução temporal da variável. Seu uso será exemplificado com o conjunto de dados `precos_acoes_petrobras.xlsx`.
+
+```{r, fig.align='center', fig.width=4, fig.height=4}
+library(readxl)
+diretorio <- 'C:\\Users\\Marcos\\Dropbox\\1. Cursos ECG\\Intro-R Treinamento TCE-MT\\3.dados'
+
+setwd(diretorio)
+acoes <- read_excel('precos_acoes_petrobras.xlsx')
+
+acoes <- acoes[order(acoes$Data),]
+plot(acoes$Cotacao, type = 'l',
+     main='Gráfico de Linha',
+     xlab='', ylab='Preço da ação')
+grid()
+```
+
+</br>
+
+### 5.4.2 Diagrama de dispersão  
+
+O diagrama de dispersão é um gráfico muito utilizado para evidenciar o relacionamento entre duas variáveis quantitativas. Por exemplo, como é relação entre as variáveis `Salário` e `Anos.de.estudo` no conjunto de dados `rh`?
+
+```{r, fig.align='center', fig.width=4, fig.height=4}
+setwd(diretorio)
+load('rh_limpo.RData')
+
+## Retirar uma amostra aleatória de 100 elementos
+set.seed(10)
+rh_amostra <- rh[sample(row.names(rh), 100),]
+plot(Salário ~ Anos.de.estudo, data=rh_amostra)
+```
+Os padrões normalmente buscados em um diagrama de dispersão (`scatterplot`), podem ser ilustrados com as figuras a seguir:
+
+![](figuras/padroes_scatterplot.png) 
+Fonte:Livro `Data Points` de Natan Yau
+
+O gráfico acima mostra a relação entre `Salário` e `Anos.de.estudo` para uma amostra dos funcionários da empresa.
+
+Mas será que o padrão evidenciado acima se repete se fossem considerados separadamente os dados dos funconários do sexo masculino e feminino?
+
+Uma forma de tentar visualizar estas duas categorias no gráfico é atribuir cores diferentes aos pontos do gráfico que representam dados de funcionários do sexo masculino e feminino. Pro exemplo, o gráfico a seguir utiliza cores (azul = homens, verde = mulheres) para evidenciar os sexos.
+
+```{r, fig.align='center', fig.width=4, fig.height=4}
+cores <- ifelse(rh_amostra$Sexo == 'Masculino', 'blue', 'red')
+plot(Salário ~ Anos.de.estudo, data=rh_amostra, col=cores, pch=16, cex=1.2)
+```
+
+Também seria possível utilizar o formato do marcador (parâmetro `pch=`) para distinguir entre homens e mulheres. 
+
+```{r, fig.align='center', fig.width=4, fig.height=4}
+simbolo <- ifelse(rh_amostra$Sexo == 'Masculino', 1, 3)
+plot(Salário ~ Anos.de.estudo, data=rh_amostra, pch=simbolo)
+```
+
+A análise dos gráficos não permitem tirar grandes conclusões. Em situações como essa, os gráficos condicionados podem ser bastante úteis. No exemplo a seguir utilizaremos o pacote `lattice` para realizar diagramas de dispersão condiciondos à variável `Sexo`.
+
+```{r, fig.align='center', fig.width=7, fig.height=4}
+library(lattice)
+xyplot(Salário ~ Anos.de.estudo | Sexo, data=rh_amostra)
+```
+A abordagem acima é mais efetiva do que as que feitas anteriormente. 
+
+</br>
+
+### 5.4.3 Boxplot  
+
+O boxplot é um gráfico que representa a distribuição de um conjunto de dados com base em alguns de seus parâmetros descritivos, quais sejam: a mediana ($q2$), o quartil inferior ($q1$), o quartil superior ($q3$) e do intervalo interquartil ($IQR = q3 - q1$).
+
+No gráfico a seguir faremos boxplots da varíável `Salário` por `unidade`.
+
+```{r, fig.align='center', fig.width=5, fig.height=5}
+setwd(diretorio)
+
+boxplot(Salário ~ Unidade, data=rh_amostra,
+        main='Meu Primeiro Boxplot', # Definição do título do gráfico
+        xlab='Unidade',              # Label para o eixo x
+        ylab='Salário',              # Label para o eixo y
+        col='lightblue',
+        cex.axis=0.7)                # Definição da cor a ser usada
+```
+
+Nos exemplos a seguir, faremos os mesmos boxplots, mas agora condicionados à variável `Departamento`, e `Departamento` e `Sexo`. 
+
+```{r, fig.align='center', fig.width=5, fig.height=5}
+bwplot(Salário ~ Unidade | Departamento, data=rh_amostra,
+       main='Boxplot', scales = list(x = list(rot = 90)))
+```
+
+
+```{r, fig.align='center', fig.width=8, fig.height=5}
+bwplot(Salário ~ Unidade | Departamento + Sexo, data=rh,
+       main='Boxplot', scales = list(x = list(rot = 90)))
+```
+
+</br>
+
+### 5.4.4 Gráfico de barras  
+
+Gráficos de barras são muito comuns.
+
+```{r, fig.align='center', fig.width=4, fig.height=4}
+dd <- sort(with(rh, table(Formação)))
+barplot(dd, main="Gráfico de Barras",
+            col='lightgreen',
+            ylab='Qtd. Funcionários')
+```
+
+</br>
+
+### 5.4.5 Histograma  
+
+Os histogramas são gráficos muito utilizados para se avaliar a distribuição de uma variável. No exemplo a seguir, utiliza-se um histograma para avaliar a distruibuição da variável `Anos.de.estudo`.
+
+```{r, fig.align='center', fig.width=4, fig.height=4}
+hist(rh$Anos.de.estudo,
+     col="lightblue",
+     breaks=15,
+     main='Histograma dos\nAnos de Estudo',
+     xlab='Anos de estudo',
+     ylab='Frequência')
+```
+
+Histograma com adição de densidade:
+
+```{r, fig.align='center', fig.width=4, fig.height=4}
+hist(rh$Anos.de.estudo,
+     col="lightblue",
+     main='Histograma dos\nAnos de Estudo',
+     xlab='Anos de estudo',
+     ylab='Frequência',
+     probability = TRUE)
+
+d <- density(na.omit(rh$Anos.de.estudo))
+lines(d, col='red', lwd=2)
+```
+
+</br>
+
+### 5.4.6 Gráfico de pizza  
+
+Gráficos de pizza são muito utilizados na prática embora não sejam as visualizações mais efetivas, em razão da dificuldadeo ser humano em avaliar ângulos. No R este gráfico é feito com a função `pie()`. Exemplo:
+
+```{r, fig.align='center', fig.width=4, fig.height=4}
+estcivil <- table(rh_amostra$Estado.Civil)
+pie(estcivil)
+```
+
+Com frequência, um gráfico de barras será mais efetivo que um gráfico de pizza. 
+
+</br>
+
+### 5.4.7 Gráfico de mosaico  
+
+O gráfico de mosaico é um gráfico utilizado para a visuação de tabelas de frequências. Permite uma visualização das frequências contidas nas células.
+
+```{r, fig.align='center', fig.width=5, fig.height=5}
+pp <- with(rh_amostra, table(Sexo, Estado.Civil))
+prop.table(pp, 1)
+mosaicplot(pp, main='Gráfico de Mosaico', color=c(2, 3, 4, 5))
+```
+
+</br>
+
+### 5.4.8 Scatterplot matrix 
+
+Um gráfico de natureza exploratória muito útil é a matriz de diagramas de dispersão, que nos possibilita visualizar em um só gráfico diversos diagramas de dispersão.
+
+```{r, fig.align='center', fig.width=5, fig.height=5}
+pairs(rh_amostra[,c('Anos.de.estudo', 'Tempo.de.empresa', 'Salário', 'Bônus')])
+```
+
+</br>
+
+### 5.4.9 Gráfico de pontos
+
+Às vezes o gráfico de pontos pode ser um bom substituto para o gráfico de barras. O conjunto dedados `mtcars` será utilizado para ilustrar sua construção.
+
+```{r, fig.align='center', fig.width=5, fig.height=5}
+mtcars <- mtcars[order(mtcars$mpg),]
+
+par(bty='n', xaxt='n')
+dotchart(mtcars$mpg, labels=row.names(mtcars),
+         cex=0.7, main='Milhas por galão de combustível',
+         xlab='Milhas', pch = 16)
+par(xaxt='s')
+axis(1, at=10:34, cex.axis=0.6)
+
+         
+## Gráfico de pontos agrupado por um fator...
+unique(mtcars$cyl)
+
+cores <- ifelse(mtcars$cyl == 4, 'red',
+         ifelse(mtcars$cyl == 6, 'blue', 'darkgreen'))
+
+par(xaxt='n')
+dotchart(mtcars$mpg, labels=row.names(mtcars), cex=0.7,
+         groups=factor(mtcars$cyl), gcolor='black', color=cores,
+         pch=16, main='Milhas por galão de combustível', xlab='Milhas')
+par(xaxt='s')
+axis(1, at=10:34, cex.axis=0.6)
+```
+
+Outra função que  pode ser utilizada para produzir gráficos semelhantes aos gráficos de pontos é `stripchart()` Seu uso é ilustrado a seguir. 
+
+```{r, fig.align='center', fig.width=6, fig.height=4}
+par(bty='o', mfrow=c(1, 2))
+stripchart(mpg ~ cyl, data=mtcars, pch=21, ylab='Qtd. Cilindros')
+
+par(bty='l')
+stripchart(mpg ~ cyl, data=mtcars, method='jitter',
+           jitter=0.05, pch=21, vertical=TRUE, xlab='Qtd. Cilindros')
+
+rug(mtcars$mpg, side=2)
+```
+
+</br>
+
+### 5.4.10 Gráficos de densidade
+
+Estes gráficos podem ser muito úteis quando queremos comparar as distribuições de dois ou mais conjuntos de dados. O conjunto de dados `IDH1991_2000.csv` será utilizado para compararmos a do IDH dos municípios nos de 1991 e 2000.  
+
+```{r, fig.align='center', fig.width=4, fig.height=4}
+setwd(diretorio)
+idh <- read.csv2('IDH1991_2000.csv')
+idh <- idh[, c('idh1991', 'idh2000')]
+
+## Desenhando os gráficos
+idh1991 <- density(idh$idh1991)
+idh2000 <- density(idh$idh2000)
+
+y.limites <- range(c(idh1991$y,idh2000$y))
+
+plot(idh1991, main='', xlab='', lty=2, lwd=2, col='blue', ylim=y.limites)
+lines(idh2000, lty=2, lwd=2, col='red')
+
+legend('topleft', legend=c('IDH 1991', 'IDH 2000'),
+       lwd=2, lty=2, col=c('blue', 'red'), bty='n', cex=0.7, y.intersp=1)
+```
+
+</br>
+
+### 5.4.11 Calendar Plot
+
+Para produzir este gráficos, utilizaremos a função `calendarHeat()`. Esta fução está definida no arquivo `funcao_calendarHeat.R` e pode ser utilizada da seguintes forma:
+
+```{r, fig.align='center', fig.height=5, fig.width=7}
+## Carregar a função calendarHeat()
+source('C:\\Users\\Marcos\\Dropbox\\1. Cursos ECG\\Intro-R Treinamento TCE-MT\\5.scripts\\6. funcao_calendarHeat.R')
+
+setwd(diretorio)
+isp <- read.csv2('microdados_isp_2013_2015Abr.csv', as.is = TRUE)
+isp <- subset(isp, ETIT == 1 & ETEN == 'Vítima')$DATF
+isp <- table(isp)
+isp <- as.data.frame(isp)
+isp <- subset(isp, isp != '')
+
+## Converão das datas...
+minha_configuracao <-  Sys.getlocale("LC_TIME")
+Sys.setlocale("LC_TIME", "C") 
+isp$isp <- as.Date(isp$isp, '%d-%b-%Y') 
+Sys.setlocale("LC_TIME", minha_configuracao) 
+
+## Apenas registros relativos aos anaos de 2013, 2014 e 2015.
+isp <- subset(isp, as.integer(format(isp, '%Y')) >= 2013)
+
+## PRODUZ O GRÁFICO DE CALENDÁRIO
+calendarHeat(dates=isp$isp, values=isp$Freq,
+             varname='Homicício Doloso', color='w2b')
+```
+
+</br>
+
+## 5.5 - OUTROS GRÁFICOS
+
+Além dos gráficos apresentados acima, diversos outros estão disponíveis aos usuários do R. Sugiro pesquisar na internet sobre os seguintes gráficos:  
+
+* _violin plot_  - pacote{vioplot} 
+* _qqplot_  - base R
+* _parallel coordinates_  - pacote{GGally}
+* _calendar plot_  - pacote{googleVis} / calendarHeat()   
+* _heatmap_  - base R   
+* _sankey plot_  - pacotes{riverplot, googleVis}
+* _spider plot_ / _radar chart_  base R      
+* _bubble chart_ - base R    
+* _treemap_  pacote{treemap, googleVis}     
+
+Além desses gráficos, pesquise os seguintes pacotes: `ggplot2`, `ggmap`, `rCharts`, `googleVis`, `ggvis`, `rgl`, `htmlwidgets`, `plotrix`, `manipulate`, `Rggobi`, `iPlots`, `igraph`, `GrapheR`.  
+
+</br>
+
+## 5.6 - DISPOSITIVOS GRÁFICOS
+
+Até o momento os gráficos produzidos foram exibidos na tela do computador e, a menos que fossem salvos manualmente com o uso das facilidades oferecidas pelo RStudio, eram perdidos. 
+
+O R dispõe de conjunto de funções para auxiliar na construção de gráficos produzidos no sistema básico e com o pacote `grid`. Algumas dessas funções permitirão salvar os gráficos produzidos em formatos diversos. Por exemplos, gráficos podem ser produzidos e salvos nos seguintes formatos: .svg, .png, .pdf, .bmp, .jpeg e .tiff, utilizando-se para tanto as seguintes funções, respectivamente: `svg()`, `png()`, `pdf()`, `bmp()`, `jpeg()`, `tiff()`. Exemplo. Criar um gráfico em .pdf:
+
+```{r, eval=FALSE}
+setwd(diretorio)
+pdf('meu_primeiro_grafico.pdf') ## Abre o dispositivo gráfico
+plot(1:10)                      ## Cria o gráfico propriamente dito
+dev.off()                       ## Desliga o dispositivo gráficos (fecha a conexão com o arquivo)
+
+```
+
+Nota: as dimensões do gráfico são fornecidas em polegadas. A opção default é 7 x 7. 
+
+Lembre-se: `1 in = 2.54cm` e `1 cm = 0.39370079 in`
+
+Para converter de cm para polegadas podemos escrever uma funçãozinha bem simples:
+
+```{r,eval=FALSE}
+to.pol <- function(cm){cm * 0.39370079}
+```
+
+Agora podemos escrever nossa função pensando nas medidas em termos de centímetros. Um gráfico de 7 cm de altura, por 10 cm de largura:
+
+```{r, eval=FALSE}
+setwd(diretorio)
+pdf('meu_segundo_grafico.pdf', height = to.pol(7), width = to.pol(10))
+plot(1:10, 10:1)                      
+dev.off()                       
+```
+
+A função `dev.off()` tem a função de fechar o dispositivo gráfico, para outros gráficos que venham a ser produzidos não sejam encaminhados para o mesmo arquivo.
+
+</br>
+
+## 5.7 - EXERCÍCIOS
+
+1. Utilizando o conjnto de dados `rh_limpo.RData` elabore um gráfico de barras que indique a frequência de pessoas em cada cada categoria da variável  `Estado.Civil`. Pesquise na internet como colocar o valor da frequência absoluta em cima de cada barra.
+
+</br>
+
+2. Faça um gráfico de dispersão das variáveis `Anos.de.estudo` e `Tempo.de.empresa`. Existe alguma relação entre estas variáveis?
+
+</br>
+
+3. Faça boxplots da variável `Anos.de.estudo`, por `Sexo`, condicionados à variável `Departamento`. Comente a respeito. 
+
+</br>
+
+4. Crie uma paleta de cores, contendo as seguintes cores: `white`, `chartreuse3`, `darkred`, `gray47`, `grey39`. 
+
+</br>
+
+5. Crie uma paleta de 7 cores indo do vermelho ao laranja. Crie um gráfico de pizza com 7 fatias e pinte com as cores da paleta criada. 
+
+</br>
+
+6. Crie um gráfico de pizza com cinco fatias e pinte as fatias das seguintes cores: `verde`, `amarelo`, `azul`, `preto`, `vermelho`.
+
+</br>
+
+7. Utilizando o conjundo de dados `cobertura de vacina.csv`, elabore um grafico boxplot que permita comparar a cobertura de vacinação nos anos 2010, 2011 e 2012. Coloque título e rótulos no eixo y. Pinte os boxplot de amarelo.
+
+</br>
+
+8. Produza um histograma da variável `x <- rnorm(500)` no formato `.png`, com o tamanho 5cm x 5cm.
+
+
+
