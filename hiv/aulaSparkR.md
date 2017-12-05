@@ -11,3 +11,9 @@ mv /etc/yum.repos.d/HDP.repo ~/
 
 sudo yum install R
 ```
+
+### Passo 15 da prática
+
+Usar
+
+`./usr/hdp/current/spark-client/bin/sparkR --packages com.databricks:spark-csv_2.10:1.5.0`
