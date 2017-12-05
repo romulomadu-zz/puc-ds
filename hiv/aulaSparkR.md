@@ -1,4 +1,4 @@
-## Tutorial aula Spark5
+## Tutorial aula SparkR
 
 ### Instalação na sandbox 2.4 da Hortonworks
 
